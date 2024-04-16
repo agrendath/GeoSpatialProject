@@ -3,6 +3,8 @@ import requests
 from datetime import datetime
 import overpy
 
+overpass_api = overpy.Overpass()
+
 def getLiveboard(station):
     url = "http://api.irail.be/liveboard"
     params = {"station": station, "format": "json"}
@@ -43,7 +45,19 @@ def getNextDeparture(station, platform):
     print("[ERROR] NO DEPARTURE FOUND")
     return None # No departure found
 
-def getStandstillPosition(station, platform):
+def getStandstillPositions(overpass_station_name):
+    query = """
+    [out:json][timeout:25];
+    area(id:3600052411)->.searchArea;
+    (
+    nwr["railway"="station"][name=\"""" + overpass_station_name + """\"]["station"!="subway"]["tram"!="yes"](area.searchArea);
+    );
+    nwr["railway"="signal"](around: 100.00);
+    out geom;
+    """
+    return overpass_api.query(query)
+
+def getStandstillPosition(station, overpass_station_name, platform):
     departure = getNextDeparture(station, platform)
     if departure is None:
         return None  # No standstill position found
@@ -52,7 +66,8 @@ def getStandstillPosition(station, platform):
     if composition is None:
         return None
     #print(composition)
-    # TODO: now that we have the composition, get static data and derive standstill position
+    # TODO: now that we have the composition, get static data and derive standstill position in function of train composition (# carriages)
+    positions = getStandstillPositions(overpass_station_name).nodes
 
 
 @app.route("/", methods=['GET'])
@@ -60,7 +75,8 @@ def index():
     #print(getLiveboard("Brussels South"))
     #print(getComposition("S51507"))
     #print(getNextDeparture("Brussels South", 13))
-    getStandstillPosition("Brussels North", 7)
+    #print(getStandstillPosition("Brussels North", 7))
+    test = getStandstillPosition("Brussels North", "Bruxelles-Nord - Brussel-Noord", 7)
     return (
     "<p><a href=/composition>Composition</a></p>"
     "<p><a href=/liveboard>liveboard</a></p>"
