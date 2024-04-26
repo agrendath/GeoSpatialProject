@@ -45,6 +45,12 @@ def getNextDeparture(station, platform):
     print("[ERROR] NO DEPARTURE FOUND")
     return None # No departure found
 
+def getNextTrainInfo(station, platform):
+    departure = getNextDeparture(station, platform)
+    if departure is None:
+        return None  # No train found
+    # TODO: add arrival time etc
+
 def getStandstillPositions(overpass_station_name):
     query = """
     [out:json][timeout:25];
@@ -77,6 +83,7 @@ def index():
     #print(getNextDeparture("Brussels South", 13))
     #print(getStandstillPosition("Brussels North", 7))
     test = getStandstillPosition("Brussels North", "Bruxelles-Nord - Brussel-Noord", 7)
+    print(test)
     return (
     "<p><a href=/composition>Composition</a></p>"
     "<p><a href=/liveboard>liveboard</a></p>"
