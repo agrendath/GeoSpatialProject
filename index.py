@@ -45,11 +45,22 @@ def getNextDeparture(station, platform):
     print("[ERROR] NO DEPARTURE FOUND")
     return None # No departure found
 
+"""
+Returns some standard information about the next train departing from the given station and platform.
+
+:param station: The station where the train departs
+:param platform: The platform where the train departs
+:return: A list with the destination, the vehicle name and the departure time in a readable format
+"""
 def getNextTrainInfo(station, platform):
     departure = getNextDeparture(station, platform)
-    if departure is None:
-        return None  # No train found
-    # TODO: add arrival time etc
+    destination = departure["station"]
+    vehicle_name = departure["vehicleinfo"]["shortname"]
+    time = datetime.fromtimestamp(int(departure["time"]))
+    readable_time = time.strftime("%H:%M")
+    
+    return [destination, vehicle_name, readable_time]
+
 
 def getStandstillPositions(overpass_station_name):
     query = """
@@ -65,9 +76,11 @@ def getStandstillPositions(overpass_station_name):
 
 def getStandstillPosition(station, overpass_station_name, platform):
     departure = getNextDeparture(station, platform)
+    print(departure)
     if departure is None:
         return None  # No standstill position found
     train_id = departure["vehicle"].split(".")[-1]
+    print(departure['vehicle'])
     composition = getComposition(train_id)
     if composition is None:
         return None
@@ -82,8 +95,8 @@ def index():
     #print(getComposition("S51507"))
     #print(getNextDeparture("Brussels South", 13))
     #print(getStandstillPosition("Brussels North", 7))
-    test = getStandstillPosition("Brussels North", "Bruxelles-Nord - Brussel-Noord", 7)
-    print(test)
+    print(getStandstillPosition("Brussels North", "Bruxelles-Nord - Brussel-Noord", 7))
+    #print(getNextTrainInfo("Brussels North", 7))
     return (
     "<p><a href=/composition>Composition</a></p>"
     "<p><a href=/liveboard>liveboard</a></p>"
