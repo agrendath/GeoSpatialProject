@@ -24,10 +24,12 @@ def getComposition(station, departure):
     liveboard = getLiveboard(station)
     from_id = liveboard["stationinfo"]["id"].split(".")[-1]
     to_id = departure["stationinfo"]["id"].split(".")[-1]
-    vehicle = departure["vehicle"].split(".")[-1]
+    vehicle = departure["vehicleinfo"]["number"]
     time = datetime.fromtimestamp(int(departure["time"]))
     print("[DEBUG] Getting composition with " + from_id + " -> " + to_id + "; vehicle:" + vehicle + "; time:" + str(time))
-    print(composition.get_train_composition(from_id, to_id, vehicle, time))
+    comp = composition.get_train_composition(from_id, to_id, vehicle, time)
+    print(comp)
+    return comp
 
 """
 Sample departure: {'id': '28', 'delay': '0', 'station': 'Kortrijk', 'stationinfo': {'locationX': '3.264549', 'locationY': '50.824506', 'id': 'BE.NMBS.008896008', 'name': 'Kortrijk', '@id': 'http://irail.be/stations/NMBS/008896008', 'standardname': 'Kortrijk'}, 'time': '1711892340', 'vehicle': 'BE.NMBS.IC2338', 'vehicleinfo': {'name': 'BE.NMBS.IC2338', 'shortname': 'IC 2338', 'number': '2338', 'type': 'IC', 'locationX': '0', 'locationY': '0', '@id': 'http://irail.be/vehicle/IC2338'}, 'platform': '13', 'platforminfo': {'name': '13', 'normal': '1'}, 'canceled': '0', 'left': '0', 'isExtra': '0', 'departureConnection': 'http://irail.be/connections/8814001/20240331/IC 2338'}
@@ -92,7 +94,7 @@ def index():
     #print(getComposition("S51507"))
     #print(getNextDeparture("Brussels North", 7))
     #print(getStandstillPosition("Brussels North", 7))
-    print(getStandstillPosition("Brussels North", "Bruxelles-Nord - Brussel-Noord", 7))
+    print(getStandstillPosition("Brussels North", "Bruxelles-Nord - Brussel-Noord", 8))
     #print(getNextTrainInfo("Brussels North", 7))
     return (
     "<p><a href=/composition>Composition</a></p>"
