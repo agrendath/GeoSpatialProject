@@ -2,6 +2,8 @@ from __main__ import app
 import requests
 from datetime import datetime
 import overpy
+from flask import render_template, request, redirect, url_for
+
 import composition
 
 overpass_api = overpy.Overpass()
@@ -20,7 +22,6 @@ def getLiveboard(station):
     return response
 
 def getComposition(station, departure): 
-    #print(composition.get_train_composition)
     liveboard = getLiveboard(station)
     from_id = liveboard["stationinfo"]["id"].split(".")[-1]
     to_id = departure["stationinfo"]["id"].split(".")[-1]
@@ -29,7 +30,22 @@ def getComposition(station, departure):
     print("[DEBUG] Getting composition with " + from_id + " -> " + to_id + "; vehicle:" + vehicle + "; time:" + str(time))
     comp = composition.get_train_composition(from_id, to_id, vehicle, time)
     print(comp)
-    return comp
+    composition_data = {
+        "facilities": comp.facilities,
+        "occupancy": comp.occupancy,
+        "carriages_count": comp.carriages_count,
+        "carriages": [
+            {
+                "carriage_type": carriage.carriage_type,
+                "model": carriage.model,
+                "classes": carriage.classes,
+                "facilities": carriage.facilities,
+                "carriage_size": carriage.carriage_size
+            }
+            for carriage in comp.carriages
+        ]
+    }
+    return composition_data
 
 """
 Sample departure: {'id': '28', 'delay': '0', 'station': 'Kortrijk', 'stationinfo': {'locationX': '3.264549', 'locationY': '50.824506', 'id': 'BE.NMBS.008896008', 'name': 'Kortrijk', '@id': 'http://irail.be/stations/NMBS/008896008', 'standardname': 'Kortrijk'}, 'time': '1711892340', 'vehicle': 'BE.NMBS.IC2338', 'vehicleinfo': {'name': 'BE.NMBS.IC2338', 'shortname': 'IC 2338', 'number': '2338', 'type': 'IC', 'locationX': '0', 'locationY': '0', '@id': 'http://irail.be/vehicle/IC2338'}, 'platform': '13', 'platforminfo': {'name': '13', 'normal': '1'}, 'canceled': '0', 'left': '0', 'isExtra': '0', 'departureConnection': 'http://irail.be/connections/8814001/20240331/IC 2338'}
@@ -72,7 +88,16 @@ def getStandstillPositions(overpass_station_name):
     nwr["railway"="signal"](around: 100.00);
     out geom;
     """
-    return overpass_api.query(query)
+    response = overpass_api.query(query)
+    positions = []
+    for node in response.nodes:
+        position = {
+            "ref": node.tags.get("ref", ""),
+            "lat": node.lat,
+            "lon": node.lon
+        }
+        positions.append(position)
+    return positions
 
 def getStandstillPosition(station, overpass_station_name, platform):
     departure = getNextDeparture(station, platform)
@@ -81,23 +106,79 @@ def getStandstillPosition(station, overpass_station_name, platform):
         return None  # No standstill position found
     train_id = departure["vehicle"].split(".")[-1]
     print(departure['vehicle'])
-    composition = getComposition(station, departure)
-    if composition is None:
+    composition_data = getComposition(station, departure)
+    if composition_data is None:
         return None
-    # TODO: now that we have the composition, get static data and derive standstill position in function of train composition (# carriages)
-    positions = getStandstillPositions(overpass_station_name).nodes
+
+    position_data = getStandstillPositions(overpass_station_name)
+
+    # Find the standstill position based on the number of carriages
+    carriages_count = composition_data["carriages_count"]
+    if carriages_count <= len(position_data):
+        standstill_position = position_data[carriages_count - 1]
+    else:
+        standstill_position = None
+
+    # Create a clean output dictionary
+    output = {
+        "station": departure["station"],
+        "destination": departure["stationinfo"]["name"],
+        "vehicle_name": departure["vehicleinfo"]["shortname"],
+        "departure_time": datetime.fromtimestamp(int(departure["time"])).strftime("%H:%M"),
+        "composition": composition_data,
+        "standstill_position": standstill_position
+    }
+
+    return output
 
 
 @app.route("/", methods=['GET'])
 def index():
-    #print(getLiveboard("Brussels South"))
-    #print(getComposition("S51507"))
-    #print(getNextDeparture("Brussels North", 7))
-    #print(getStandstillPosition("Brussels North", 7))
-    print(getStandstillPosition("Brussels North", "Bruxelles-Nord - Brussel-Noord", 8))
-    #print(getNextTrainInfo("Brussels North", 7))
+    station = "Brussels North"
+    platform = 8
+    standstill_position = getStandstillPosition(station, "Bruxelles-Nord - Brussel-Noord", platform)
+
+    if standstill_position is None:
+        return "No standstill position found."
+
+    destination = standstill_position["destination"]
+    vehicle_name = standstill_position["vehicle_name"]
+    departure_time = standstill_position["departure_time"]
+    composition_data = standstill_position["composition"]
+    standstill_position_data = standstill_position["standstill_position"]
+
+    carriages_info = []
+    for carriage in composition_data["carriages"]:
+        carriage_type = carriage["carriage_type"]
+        model = carriage["model"]
+        facilities = carriage["facilities"]
+        carriage_info = model
+        if "bike" in facilities:
+            carriage_info += " (Bike)"
+        if "accessible_toilet" in facilities:
+            carriage_info += " (Accessible toilet)"
+        elif "toilet" in facilities:
+            carriage_info += " (Toilet)"
+
+        carriages_info.append(carriage_info)
+
+    carriages = ", ".join(carriages_info)
+
+    if standstill_position_data:
+        position_info = f"Position: Ref - {standstill_position_data['ref']}, Lat - {standstill_position_data['lat']}, Lon - {standstill_position_data['lon']}"
+    else:
+        position_info = "No standstill position data found."
+
     return (
-    "<p><a href=/composition>Composition</a></p>"
-    "<p><a href=/liveboard>liveboard</a></p>"
-    "<p><a href=/liveboardSchema>liveboardSchema</a></p>"
+        f"<h2>Next departure</h2>"
+        f"<p>Destination: {destination}</p>"
+        f"<p>Vehicle name: {vehicle_name}</p>"
+        f"<p>Departure time: {departure_time}</p>"
+        f"<h2>Train composition</h2>"
+        f"<p>Facilities: {facilities}</p>"
+        f"<p>Occupancy: {composition_data['occupancy']}</p>"
+        f"<p>Number of carriages: {composition_data['carriages_count']}</p>"
+        f"<p>Carriages: {carriages}</p>"
+        f"<h2>Standstill position</h2>"
+        f"<p>{position_info}</p>"
     )

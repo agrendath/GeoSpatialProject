@@ -37,7 +37,7 @@ class Carriage(pydantic.BaseModel):
     carriage_type: str
     model: str
     classes: list[int]
-    facilities: list[Literal["accessible_toilet", "toilet", "bike"]]
+    facilities: list[Literal["accessible_toilet", "toilet", "bike", "luggage_lockers"]]
     carriage_size: float
 
 
@@ -123,7 +123,6 @@ def parse_sncb_html_compositions(html_data: str) -> Train:
     carriages = parse_carriages(soup)
 
     return parse_train_composition(soup, carriages)
-
 
 def get_train_composition(
     from_id: str, to_id: str, train_number: str, departure_time: datetime
