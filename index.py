@@ -100,9 +100,16 @@ def getStandstillPositions(overpass_station_name):
         positions.append(position)
     return positions
 
-def getNodeWithTrack(nodes, track):
+def getNodesWithTrack(nodes, track):
+    result = []
     for node in nodes:
         if node.tags.get("track", "") == track:
+            result.append(node)
+    return result
+
+def getNodeWithRef(nodes, ref):
+    for node in nodes:
+        if node.tags.get("ref", "") == ref:
             return node
     return None
 
@@ -143,11 +150,11 @@ def getStandstillPosition(station, overpass_station_name, platform):
     position_data = getStandstillPositions(overpass_station_name)
 
     # Find the standstill position based on the number of carriages
-    carriages_count = composition_data["carriages_count"]
-    if carriages_count <= len(position_data):
-        standstill_position = position_data[carriages_count - 1]
-    else:
-        standstill_position = None
+    signals = getNodesWithTrack(position_data, platform)
+    carriages_amount = composition_data["carriages_count"]
+    standstill_position = getNodeWithRef(signals, str(carriages_amount))
+    if standstill_position is None:
+        print("[WARNING] Was not able to find standstill position for " + str(carriages_amount) + " carriages.")
 
     # Create a clean output dictionary
     output = {
