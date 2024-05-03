@@ -92,12 +92,19 @@ def getStandstillPositions(overpass_station_name):
     positions = []
     for node in response.nodes:
         position = {
+            "track": node.tags.get("track", ""),
             "ref": node.tags.get("ref", ""),
             "lat": node.lat,
             "lon": node.lon
         }
         positions.append(position)
     return positions
+
+def getNodeWithTrack(nodes, track):
+    for node in nodes:
+        if node.tags.get("track", "") == track:
+            return node
+    return None
 
 def getZoneMarkers(overpass_station_name):
     query = """
@@ -141,6 +148,9 @@ def getStandstillPosition(station, overpass_station_name, platform):
         standstill_position = position_data[carriages_count - 1]
     else:
         standstill_position = None
+
+    # Check that the composition has carriages and facilities
+
 
     # Create a clean output dictionary
     output = {
@@ -187,6 +197,8 @@ def index():
         carriages_info.append(carriage_info)
 
     carriages = ", ".join(carriages_info)
+
+    facilities = composition_data["facilities"]
 
     if standstill_position_data:
         position_info = f"Position: Ref - {standstill_position_data['ref']}, Lat - {standstill_position_data['lat']}, Lon - {standstill_position_data['lon']}"
