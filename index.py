@@ -168,6 +168,5 @@ def index():
     else:
         position_info = "No standstill position data found."
 
-
-
+    #return(f"{destination}" f"{vehicle_name}" f"{departure_time}" f"{composition_data}")
     return render_template('index.html', destination = f"{destination}", vehicle_name = f"{vehicle_name}",departure_time = f"{departure_time}",facilities = f"{facilities}",composition_occupancy = f"{composition_data['occupancy']}",composition_carriages = f"{composition_data['carriages_count']}",carriages = f"{carriages}",position_info = f"{position_info}")
