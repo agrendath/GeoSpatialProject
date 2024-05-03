@@ -56,7 +56,7 @@ def getNextDeparture(station, platform):
         return None
     departures = liveboard["departures"]["departure"]
     for departure in departures:
-        if int(departure["platform"]) == platform:
+        if departure["platform"] != "?" and int(departure["platform"]) == platform:
             return departure
     print("[ERROR] NO DEPARTURE FOUND")
     return None # No departure found
