@@ -151,8 +151,11 @@ def getStandstillPosition(station, overpass_station_name, platform):
 
     # Find the standstill position based on the number of carriages
     signals = getNodesWithTrack(position_data, platform)
-    carriages_amount = composition_data["carriages_count"]
-    standstill_position = getNodeWithRef(signals, str(carriages_amount))
+    carriages_amount = int(composition_data["carriages_count"])
+    temp_amount = carriages_amount
+    if carriages_amount % 2 == 1:   # if the amount of carriages is uneven we need to add 1 so we can find a valid stop signal
+        temp_amount += 1
+    standstill_position = getNodeWithRef(signals, str(temp_amount))
     if standstill_position is None:
         print("[WARNING] Was not able to find standstill position for " + str(carriages_amount) + " carriages.")
 
@@ -173,7 +176,7 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 5
+    platform = 12
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     if standstill_position is None:
