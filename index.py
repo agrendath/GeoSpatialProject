@@ -103,13 +103,13 @@ def getStandstillPositions(overpass_station_name):
 def getNodesWithTrack(nodes, track):
     result = []
     for node in nodes:
-        if node.tags.get("track", "") == track:
+        if node["track"] == track:
             result.append(node)
     return result
 
 def getNodeWithRef(nodes, ref):
     for node in nodes:
-        if node.tags.get("ref", "") == ref:
+        if node["ref"] == ref:
             return node
     return None
 
@@ -173,7 +173,7 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 8
+    platform = 5
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     if standstill_position is None:
