@@ -99,6 +99,29 @@ def getStandstillPositions(overpass_station_name):
         positions.append(position)
     return positions
 
+def getZoneMarkers(overpass_station_name):
+    query = """
+    [out:json][timeout:25];
+    area(id:3600052411)->.searchArea;
+    (
+    nwr["railway"="station"][name=\"""" + overpass_station_name + """\"]["station"!="subway"]["tram"!="yes"](area.searchArea);
+    );
+    nwr["railway"="platform_marker"](around: 100.00);
+    out geom;
+    """
+    
+    response = overpass_api.query(query)
+    zone_markers = []
+    for node in response.nodes:
+        marker = {
+            "ref": node.tags.get("ref", ""),
+            "lat": node.lat,
+            "lon": node.lon
+        }
+        zone_markers.append(marker)
+
+    return zone_markers
+
 def getStandstillPosition(station, overpass_station_name, platform):
     departure = getNextDeparture(station, platform)
     print(departure)
@@ -135,8 +158,9 @@ def getStandstillPosition(station, overpass_station_name, platform):
 @app.route("/", methods=['GET'])
 def index():
     station = "Brussels North"
+    station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
     platform = 8
-    standstill_position = getStandstillPosition(station, "Bruxelles-Nord - Brussel-Noord", platform)
+    standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     if standstill_position is None:
         return "No standstill position found."
