@@ -149,9 +149,6 @@ def getStandstillPosition(station, overpass_station_name, platform):
     else:
         standstill_position = None
 
-    # Check that the composition has carriages and facilities
-
-
     # Create a clean output dictionary
     output = {
         "station": departure["station"],
