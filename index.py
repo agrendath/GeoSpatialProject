@@ -180,7 +180,7 @@ def index():
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     if standstill_position is None:
-        return "No standstill position found."
+        return render_template('index.html', error=f"No standstill position found for {station_overpass_name}.")
 
     destination = standstill_position["destination"]
     vehicle_name = standstill_position["vehicle_name"]
@@ -212,16 +212,4 @@ def index():
     else:
         position_info = "No standstill position data found."
 
-    return (
-        f"<h2>Next departure</h2>"
-        f"<p>Destination: {destination}</p>"
-        f"<p>Vehicle name: {vehicle_name}</p>"
-        f"<p>Departure time: {departure_time}</p>"
-        f"<h2>Train composition</h2>"
-        f"<p>Facilities: {facilities}</p>"
-        f"<p>Occupancy: {composition_data['occupancy']}</p>"
-        f"<p>Number of carriages: {composition_data['carriages_count']}</p>"
-        f"<p>Carriages: {carriages}</p>"
-        f"<h2>Standstill position</h2>"
-        f"<p>{position_info}</p>"
-    )
+    return render_template('index.html', error = "No", destination = f"{destination}", vehicle_name = f"{vehicle_name}",departure_time = f"{departure_time}",facilities = f"{facilities}",composition_occupancy = f"{composition_data['occupancy']}",composition_carriages = f"{composition_data['carriages_count']}",carriages = f"{carriages}",position_info = f"{position_info}")

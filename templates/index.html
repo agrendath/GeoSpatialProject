@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+		<script type="text/javascript" src="{{ url_for('static', filename='script/script.js') }}"></script>
+		<title>Project</title>
+	</head>
+	
+	<body>
+	{% if error != "No" %}
+		<div class="warning"><p>{{ error }}</p></div>
+    	{% else %}
+		<h2>Next departure</h2>	
+        		<p>Destination: {{ destination }}</p>
+        		<p>Vehicle name: {{ vehicle_name }}</p>
+        		<p>Departure time: {{ departure_time }}</p>
+		<h2>Train composition</h2>
+			<p>Facilities: {{ facilities }}</p>
+			<p>Occupancy: {{ composition_occupancy }}</p>
+			<p>Number of carriages: {{ composition_carriages }}</p>
+			<p>Carriages: {{ carriages }}</p>
+		<h2>Standstill position</h2>
+        		<p>{{ position_info }}</p>	
+        {% endif %}
+        </body>
+</html>
