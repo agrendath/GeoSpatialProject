@@ -178,9 +178,13 @@ def index():
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
     platform = 12
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
+    
+    #return(f"{standstill_position}")
+    #standstill_position = None   #test with no standstill_position if standstill_position
+    #standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989', 'departure_time': '19:10', 'composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 3, 'carriages': [{'carriage_type': 'left-wagon', 'model': 'AM08P_c', 'classes': [1, 2], 'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08P_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': 'middle-wagon', 'model': 'AM08P_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}]}, 'standstill_position': None}  #test with standstill_position if no standstill_position
 
     if standstill_position is None:
-        return render_template('index.html', error=f"No standstill position found for {station_overpass_name}.")
+        return render_template('index.html', platform=f"{platform}", error=f"No standstill position found for {station}.")
 
     destination = standstill_position["destination"]
     vehicle_name = standstill_position["vehicle_name"]
@@ -212,4 +216,4 @@ def index():
     else:
         position_info = "No standstill position data found."
 
-    return render_template('index.html', error = "No", destination = f"{destination}", vehicle_name = f"{vehicle_name}",departure_time = f"{departure_time}",facilities = f"{facilities}",composition_occupancy = f"{composition_data['occupancy']}",composition_carriages = f"{composition_data['carriages_count']}",carriages = f"{carriages}",position_info = f"{position_info}")
+    return render_template('index.html', error = "No", platform=f"{platform}", destination = f"{destination}", vehicle_name = f"{vehicle_name}",departure_time = f"{departure_time}",facilities = f"{facilities}",composition_occupancy = f"{composition_data['occupancy']}",composition_carriages = f"{composition_data['carriages_count']}",carriages = f"{carriages}",position_info = f"{position_info}")

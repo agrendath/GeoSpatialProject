@@ -6,20 +6,36 @@
 	</head>
 	
 	<body>
-	{% if error != "No" %}
-		<div class="warning"><p>{{ error }}</p></div>
-    	{% else %}
-		<h2>Next departure</h2>	
-        		<p>Destination: {{ destination }}</p>
-        		<p>Vehicle name: {{ vehicle_name }}</p>
-        		<p>Departure time: {{ departure_time }}</p>
-		<h2>Train composition</h2>
-			<p>Facilities: {{ facilities }}</p>
-			<p>Occupancy: {{ composition_occupancy }}</p>
-			<p>Number of carriages: {{ composition_carriages }}</p>
-			<p>Carriages: {{ carriages }}</p>
-		<h2>Standstill position</h2>
-        		<p>{{ position_info }}</p>	
-        {% endif %}
+		<header>
+			{% if error == "No" %}
+				<h1>{{ departure_time }}<h1>
+			{% else %}
+				<h1>No train<h1>			
+			{% endif %}
+			<h1>S{{ platform }}</h1>	
+		</header>
+		{% if error != "No" %}
+			<div class="bodywarning">
+				<div class="warning">
+					<p>{{ error }}</p>
+				</div>
+			</div>
+	    	{% else %}
+	    		<h1 class="yellow">{{ destination }}</h1>
+			<h2>Next departure</h2>	
+				<p>Destination: {{ destination }}</p>
+				<p>Vehicle name: {{ vehicle_name }}</p>
+				<p>Departure time: {{ departure_time }}</p>
+			<h2>Train composition</h2>
+				<p>Facilities: {{ facilities }}</p>
+				<p>Occupancy: {{ composition_occupancy }}</p>
+				<p>Number of carriages: {{ composition_carriages }}</p>
+				<p>Carriages: {{ carriages }}</p>
+			<h2>Standstill position</h2>
+				<p>{{ position_info }}</p>	
+		{% endif %}
+		<footer>
+			<p>pronchai train </p>	
+		</footer>
         </body>
 </html>
