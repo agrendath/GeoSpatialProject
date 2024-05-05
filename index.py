@@ -169,6 +169,12 @@ def getStandstillPosition(station, overpass_station_name, platform):
     if standstill_position is None:
         print("[WARNING] Was not able to find standstill position for " + str(carriages_amount) + " carriages.")
 
+    # Get the zone markers
+    all_zone_markers = getZoneMarkers(overpass_station_name)
+    track_zone_markers = getNodesWithTrack(all_zone_markers, platform)
+    if len(track_zone_markers) == 0:
+        print("[WARNING] No zone markers found for track " + str(platform))
+
     # Create a clean output dictionary
     output = {
         "station": departure["station"],
@@ -176,7 +182,8 @@ def getStandstillPosition(station, overpass_station_name, platform):
         "vehicle_name": departure["vehicleinfo"]["shortname"],
         "departure_time": datetime.fromtimestamp(int(departure["time"])).strftime("%H:%M"),
         "composition": composition_data,
-        "standstill_position": standstill_position
+        "standstill_position": standstill_position,
+        "zone_markers": track_zone_markers
     }
 
     return output
@@ -226,4 +233,6 @@ def index():
     else:
         position_info = "No standstill position data found."
 
-    return render_template('index.html', error = "No", platform=f"{platform}", destination = f"{destination}", vehicle_name = f"{vehicle_name}",departure_time = f"{departure_time}",facilities = f"{facilities}",composition_occupancy = f"{composition_data['occupancy']}",composition_carriages = f"{composition_data['carriages_count']}",carriages = f"{carriages}",position_info = f"{position_info}")
+    zone_markers = standstill_position["zone_markers"]
+
+    return render_template('index.html', error = "No", platform=f"{platform}", destination = f"{destination}", vehicle_name = f"{vehicle_name}",departure_time = f"{departure_time}",facilities = f"{facilities}",composition_occupancy = f"{composition_data['occupancy']}",composition_carriages = f"{composition_data['carriages_count']}",carriages = f"{carriages}",position_info = f"{position_info}", zone_markers = f"{zone_markers}")
