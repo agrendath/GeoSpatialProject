@@ -92,25 +92,31 @@ def getStandstillPositions(overpass_station_name):
     positions = []
     for node in response.nodes:
         position = {
-            "track": node.tags.get("track", ""),
+            "track": node.tags.get("ref:track", ""),
             "ref": node.tags.get("ref", ""),
             "lat": node.lat,
             "lon": node.lon
         }
         positions.append(position)
+
+    if(positions == []):
+        print("[ERROR] No signal points found.")
     return positions
 
 def getNodesWithTrack(nodes, track):
     result = []
     for node in nodes:
-        if node["track"] == track:
+        if node["track"] == str(track):
             result.append(node)
+    if len(result) == 0:
+        print("[ERROR] Got empty list of nodes when looking for standstill positions for track " + str(track))
     return result
 
 def getNodeWithRef(nodes, ref):
     for node in nodes:
-        if node["ref"] == ref:
+        if node["ref"] == str(ref):
             return node
+    print("[WARNING] No node found with ref " + str(ref))
     return None
 
 def getZoneMarkers(overpass_station_name):
@@ -128,17 +134,21 @@ def getZoneMarkers(overpass_station_name):
     zone_markers = []
     for node in response.nodes:
         marker = {
+            "track": node.tags.get("ref:track", ""),
             "ref": node.tags.get("ref", ""),
             "lat": node.lat,
             "lon": node.lon
         }
         zone_markers.append(marker)
 
+    if(zone_markers == []):
+        print("[ERROR] No zone markers found.")
+
     return zone_markers
 
 def getStandstillPosition(station, overpass_station_name, platform):
     departure = getNextDeparture(station, platform)
-    print(departure)
+    #print(departure)
     if departure is None:
         return None  # No standstill position found
     train_id = departure["vehicle"].split(".")[-1]
@@ -153,8 +163,8 @@ def getStandstillPosition(station, overpass_station_name, platform):
     signals = getNodesWithTrack(position_data, platform)
     carriages_amount = int(composition_data["carriages_count"])
     temp_amount = carriages_amount
-    if carriages_amount % 2 == 1:   # if the amount of carriages is uneven we need to add 1 so we can find a valid stop signal
-        temp_amount += 1
+    if carriages_amount % 2 == 1:   # if the amount of carriages is uneven we need to remove 1 to find the standstill position
+        temp_amount -= 1
     standstill_position = getNodeWithRef(signals, str(temp_amount))
     if standstill_position is None:
         print("[WARNING] Was not able to find standstill position for " + str(carriages_amount) + " carriages.")
@@ -176,7 +186,7 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 12
+    platform = 8
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
     
     #return(f"{standstill_position}")
