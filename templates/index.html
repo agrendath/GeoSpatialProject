@@ -1,43 +1,47 @@
 <html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-		<script type="text/javascript" src="{{ url_for('static', filename='script/script.js') }}"></script>
-		<title>Project</title>
-	</head>
-	
-	<body>
-		<header>
-			{% if error == "No" %}
-				<h1>{{ departure_time }}<h1>
-			{% else %}
-				<h1>No train<h1>			
-			{% endif %}
-			<h1>S{{ platform }}</h1>	
-		</header>
-		{% if error != "No" %}
-			<div class="bodywarning">
-				<div class="warning">
-					<p>{{ error }}</p>
-				</div>
-			</div>
-	    	{% else %}
-	    		<h1 class="yellow">{{ destination }}</h1>
-			<h2>Next departure</h2>	
-				<p>Destination: {{ destination }}</p>
-				<p>Vehicle name: {{ vehicle_name }}</p>
-				<p>Departure time: {{ departure_time }}</p>
-			<h2>Train composition</h2>
-				<p>Facilities: {{ facilities }}</p>
-				<p>Occupancy: {{ composition_occupancy }}</p>
-				<p>Number of carriages: {{ composition_carriages }}</p>
-				<p>Carriages: {{ carriages }}</p>
-			<h2>Standstill position</h2>
-				<p>{{ position_info }}</p>	
-			<h2>Zones</h2>
-				<p>{{ zone_markers }}</p>
-		{% endif %}
-		<footer>
-			<p>prochain train </p>	
-		</footer>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+        <script type="text/javascript" src="{{ url_for('static', filename='script/script.js') }}"></script>
+        <title>Project</title>
+    </head>
+
+    <body>
+        <header>
+            {% if error == "No" %}
+                <h1>{{ departure_time }}<h1>
+            {% else %}
+                <h1>No train<h1>
+            {% endif %}
+            <h1>S{{ platform }}</h1>
+        </header>
+        {% if error != "No" %}
+            <div class="bodywarning">
+                <div class="warning">
+                    <p>{{ error }}</p>
+                </div>
+            </div>
+            {% else %}
+                <h1 class="yellow">{{ destination }}</h1>
+            <!--<h2>Next departure</h2>
+                <p>Destination: {{ destination }}</p>
+                <p>Vehicle name: {{ vehicle_name }}</p>
+                <p>Departure time: {{ departure_time }}</p> -->
+            <p>This train will stop at :</p>
+            <p> <b>AJOUTER LA LISTE DES ARRETS</b> </p>
+            <h2>Train composition</h2>
+                <p>Facilities: {{ facilities }}</p>
+                <p>Occupancy: {{ composition_occupancy }}</p>
+                <p>Number of carriages: {{ composition_carriages }}</p>
+                <p>Carriages: {{ carriages }}</p>
+            <h2>Standstill position</h2>
+                <p>{{ position_info }}</p>
+            <h2>Zones</h2>
+                <p>{{ zone_markers }}</p>
+                            <div class="barre"> |A|B|C|D|E|</div>
+            <div class="train"> </div>
+        {% endif %}
+        <footer>
+			<p><strong>Next train : </strong> {{next_departure_time}} <span class="yellow"> {{ next_destination }} </span> </p>
+        </footer>
         </body>
 </html>
