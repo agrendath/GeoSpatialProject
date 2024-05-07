@@ -232,8 +232,12 @@ def index():
     departure_time = standstill_position["departure_time"]
     composition_data = standstill_position["composition"]
     standstill_position_data = standstill_position["standstill_position"]
-    next_destination = standstill_position["next_destination"]
-    next_departure_time = standstill_position["next_departure_time"]
+    try : 
+        next_destination = standstill_position["next_destination"]
+        next_departure_time = standstill_position["next_departure_time"]
+    except KeyError : 
+        next_destination = "None"
+        next_departure_time = "None"
 
     carriages_info = []
     for carriage in composition_data["carriages"]:
@@ -260,6 +264,10 @@ def index():
     else:
         position_info = "No standstill position data found."
 
-    zone_markers = standstill_position["zone_markers"]
+    try :
+        zone_markers = standstill_position["zone_markers"]
+    except KeyError : 
+        zone_markers = "None"
+        
 
     return render_template('index.html', error = "No", platform=f"{platform}", destination = f"{destination}", vehicle_name = f"{vehicle_name}",departure_time = f"{departure_time}",facilities = f"{facilities}",composition_occupancy = f"{composition_data['occupancy']}",composition_carriages = f"{composition_data['carriages_count']}",carriages = f"{carriages}",position_info = f"{position_info}", zone_markers = f"{zone_markers}", next_destination = f"{next_destination}", next_departure_time = f"{next_departure_time}")
