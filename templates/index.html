@@ -2,6 +2,7 @@
     <head>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
         <script type="text/javascript" src="{{ url_for('static', filename='script/script.js') }}"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <title>Project</title>
     </head>
 
@@ -28,76 +29,88 @@
                 <p>Departure time: {{ departure_time }}</p> -->
             <p>This train will stop at :</p>
             <p> <b>AJOUTER LA LISTE DES ARRETS</b> </p>
-            <h2>Train composition</h2>
+            <!--<h2>Train composition</h2>
                 <p>Facilities: {{ facilities }}</p>
                 <p>Occupancy: {{ composition_occupancy }}</p>
                 <p>Number of carriages: {{ composition_carriages }}</p>
                 <p>Carriages: {{ carriages }}</p>
+                <p> {{ bikes }}</p>-->
             <h2>Standstill position</h2>
                 <p>{{ position_info }}</p>
             <h2>Zones</h2>
                 <p>{{ zone_markers }}</p>
+            <h2>Icons</h2>
+            <i class="fa fa-bicycle"></i><br>
+            <i class="fa fa-wheelchair"></i><br>
+            <i class="fa fa-arrow-right"></i><br>
             <div class="barre"> |A|B|C|D|E|</div>
-                <div class="train"> 
+                <div class="train">
                     <!-- Si début e  -->
-                    {% if composition_carriages == "10" %} 
-                    <div class="cb" id="c1"> </div><div class="cb" id="c2"> </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                    {% elif composition_carriages == "9" %} 
+                    {% if composition_carriages == "10" %}
+        {% for item in bikes %}
+            {% if item == 'ok' %}
+                <div class="cb" id="c{{ loop.index }}"><i class="fa fa-bicycle"></i></div>
+            {% else %}
+                <div class="cb" id="c{{ loop.index }}"></div>
+            {% endif %}
+        {% endfor %}
+                    <!--<div class="cb" id="c1"> </div><div class="cb" id="c2"> </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>-->
+                    {% elif composition_carriages == "9" %}
                     <div class="cw" id="c1"> </div><div class="cb" id="c2"> </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                    {% elif composition_carriages == "8" %} 
+                    {% elif composition_carriages == "8" %}
                     <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                    {% elif composition_carriages == "7" %} 
+                    {% elif composition_carriages == "7" %}
                     <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "6" %} 
+                   {% elif composition_carriages == "6" %}
                     <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "5" %} 
+                   {% elif composition_carriages == "5" %}
                     <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "4" %} 
+                   {% elif composition_carriages == "4" %}
                     <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "3" %} 
+                   {% elif composition_carriages == "3" %}
                     <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "2" %} 
+                   {% elif composition_carriages == "2" %}
                     <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cw" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                    {% endif %} 
-                    <!-- Trouver une manière responsive à la place 
-                    <!-- Si début d 
-                    {% if composition_carriages == "8" %} 
+                    {% endif %}
+                    <!-- Trouver une manière responsive à la place
+                    <!-- Si début d
+                    {% if composition_carriages == "8" %}
                     </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                    {% elif composition_carriages == "7" %} 
+                    {% elif composition_carriages == "7" %}
                     </div><div class="cw" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "6" %} 
+                   {% elif composition_carriages == "6" %}
                     <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "5" %} 
+                   {% elif composition_carriages == "5" %}
                     <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "4" %} 
+                   {% elif composition_carriages == "4" %}
                     <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "3" %} 
+                   {% elif composition_carriages == "3" %}
                     <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "2" %} 
+                   {% elif composition_carriages == "2" %}
                     <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cw" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                    {% endif %} 
-                    <!-- Si début c 
-                   {% if composition_carriages == "6" %} 
+                    {% endif %}
+                    <!-- Si début c
+                   {% if composition_carriages == "6" %}
                     <div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "5" %} 
+                   {% elif composition_carriages == "5" %}
                     <div class="cw" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "4" %} 
+                   {% elif composition_carriages == "4" %}
                     <div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "3" %} 
+                   {% elif composition_carriages == "3" %}
                     <div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "2" %} 
+                   {% elif composition_carriages == "2" %}
                     <div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cw" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                    {% endif %} 
-                    <!-- Si début b 
-                   {% if composition_carriages == "4" %} 
+                    {% endif %}
+                    <!-- Si début b
+                   {% if composition_carriages == "4" %}
                     <div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "3" %} 
+                   {% elif composition_carriages == "3" %}
                     <div class="cw" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                   {% elif composition_carriages == "2" %} 
+                   {% elif composition_carriages == "2" %}
                     <div class="cw" id="c7"> </div><div class="cw" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
-                    {% endif %} 
-                    <!-- Si début a 
-                   {% if composition_carriages == "2" %} 
+                    {% endif %}
+                    <!-- Si début a
+                   {% if composition_carriages == "2" %}
                     <div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
                     {% endif %} -->
                 </div>

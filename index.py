@@ -2,11 +2,12 @@ from __main__ import app
 import requests
 from datetime import datetime
 import overpy
-from flask import render_template
+from flask import render_template, request, redirect, url_for
 
 import composition
 
 overpass_api = overpy.Overpass()
+
 
 def getLiveboard(station):
     url = "http://api.irail.be/liveboard"
@@ -21,13 +22,15 @@ def getLiveboard(station):
         return None
     return response
 
+
 def getComposition(station, departure):
     liveboard = getLiveboard(station)
     from_id = liveboard["stationinfo"]["id"].split(".")[-1]
     to_id = departure["stationinfo"]["id"].split(".")[-1]
     vehicle = departure["vehicleinfo"]["number"]
     time = datetime.fromtimestamp(int(departure["time"]))
-    print("[DEBUG] Getting composition with " + from_id + " -> " + to_id + "; vehicle:" + vehicle + "; time:" + str(time))
+    print(
+        "[DEBUG] Getting composition with " + from_id + " -> " + to_id + "; vehicle:" + vehicle + "; time:" + str(time))
     comp = composition.get_train_composition(from_id, to_id, vehicle, time)
     print(comp)
     composition_data = {
@@ -47,9 +50,12 @@ def getComposition(station, departure):
     }
     return composition_data
 
+
 """
 Sample departure: {'id': '28', 'delay': '0', 'station': 'Kortrijk', 'stationinfo': {'locationX': '3.264549', 'locationY': '50.824506', 'id': 'BE.NMBS.008896008', 'name': 'Kortrijk', '@id': 'http://irail.be/stations/NMBS/008896008', 'standardname': 'Kortrijk'}, 'time': '1711892340', 'vehicle': 'BE.NMBS.IC2338', 'vehicleinfo': {'name': 'BE.NMBS.IC2338', 'shortname': 'IC 2338', 'number': '2338', 'type': 'IC', 'locationX': '0', 'locationY': '0', '@id': 'http://irail.be/vehicle/IC2338'}, 'platform': '13', 'platforminfo': {'name': '13', 'normal': '1'}, 'canceled': '0', 'left': '0', 'isExtra': '0', 'departureConnection': 'http://irail.be/connections/8814001/20240331/IC 2338'}
 """
+
+
 def getNextDeparture(station, platform):
     liveboard = getLiveboard(station)
     if liveboard is None:
@@ -59,7 +65,8 @@ def getNextDeparture(station, platform):
         if departure["platform"] != "?" and int(departure["platform"]) == platform:
             return departure
     print("[ERROR] NO DEPARTURE FOUND")
-    return None # No departure found
+    return None  # No departure found
+
 
 """
 Returns some standard information about the next train departing from the given station and platform.
@@ -68,6 +75,8 @@ Returns some standard information about the next train departing from the given 
 :param platform: The platform where the train departs
 :return: A list with the destination, the vehicle name and the departure time in a readable format
 """
+
+
 def getNextTrainInfo(station, platform):
     departure = getNextDeparture(station, platform)
     destination = departure["station"]
@@ -99,9 +108,10 @@ def getStandstillPositions(overpass_station_name):
         }
         positions.append(position)
 
-    if(positions == []):
+    if (positions == []):
         print("[ERROR] No signal points found.")
     return positions
+
 
 def getNodesWithTrack(nodes, track):
     result = []
@@ -112,12 +122,14 @@ def getNodesWithTrack(nodes, track):
         print("[ERROR] Got empty list of nodes when looking for standstill positions for track " + str(track))
     return result
 
+
 def getNodeWithRef(nodes, ref):
     for node in nodes:
         if node["ref"] == str(ref):
             return node
     print("[WARNING] No node found with ref " + str(ref))
     return None
+
 
 def getZoneMarkers(overpass_station_name):
     query = """
@@ -141,11 +153,10 @@ def getZoneMarkers(overpass_station_name):
         }
         zone_markers.append(marker)
 
-    if(zone_markers == []):
+    if (zone_markers == []):
         print("[ERROR] No zone markers found.")
 
     return zone_markers
-
 
 
 def getNextNextDeparture(station, platform):
@@ -216,43 +227,66 @@ def getStandstillPosition(station, overpass_station_name, platform):
     return output
 
 
-
 @app.route("/", methods=['GET'])
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 8
+    platform = 1
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
+    # return(f"{standstill_position}")
+    # standstill_position = None   #test with no standstill_position if standstill_position
+    standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989',
+                           'departure_time': '19:10',
+                           'composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low',
+                                           'carriages_count': 10, 'carriages': [
+                                   {'carriage_type': 'left-wagon', 'model': 'AM08P_c', 'classes': [1, 2],
+                                    'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4},
+                                   {'carriage_type': '', 'model': 'AM08P_b', 'classes': [2], 'facilities': [],
+                                    'carriage_size': 18.4},
+                                   {'carriage_type': 'middle-wagon', 'model': 'AM08P_a', 'classes': [1, 2],
+                                    'facilities': [], 'carriage_size': 18.4}]},
+                           'standstill_position': None}  # test with standstill_position if no standstill_position
+
     if standstill_position is None:
-        return render_template('index.html', platform=f"{platform}", error=f"No standstill position found for {station}.")
+        return render_template('index.html', platform=f"{platform}",
+                               error=f"No standstill position found for {station}.")
 
     destination = standstill_position["destination"]
     vehicle_name = standstill_position["vehicle_name"]
     departure_time = standstill_position["departure_time"]
     composition_data = standstill_position["composition"]
     standstill_position_data = standstill_position["standstill_position"]
-    try : 
+    try:
         next_destination = standstill_position["next_destination"]
         next_departure_time = standstill_position["next_departure_time"]
-    except KeyError : 
+    except KeyError:
         next_destination = "None"
         next_departure_time = "None"
 
     carriages_info = []
+    bikes = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
+    toilets = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
+    a_toilets = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
+    i = 0
     for carriage in composition_data["carriages"]:
         carriage_type = carriage["carriage_type"]
-        carriage_classe = carriage["classes"]
+        carriage_classes = carriage["classes"]
         model = carriage["model"]
         facilities = carriage["facilities"]
+        carriages_icon = ""
         carriage_info = model
         if "bike" in facilities:
             carriage_info += " (Bike)"
+            bikes[i] = "ok"
         if "accessible_toilet" in facilities:
             carriage_info += " (Accessible toilet)"
+            a_toilets[i] = "ok"
         elif "toilet" in facilities:
             carriage_info += " (Toilet)"
-        carriage_info += f" - {carriage_classe}"
+            toilets[i] = "ok"
+
+        carriage_info += f" - {carriage_classes}"
         carriages_info.append(carriage_info)
 
     carriages = ", ".join(carriages_info)
@@ -264,10 +298,15 @@ def index():
     else:
         position_info = "No standstill position data found."
 
-    try :
+    try:
         zone_markers = standstill_position["zone_markers"]
-    except KeyError : 
+    except KeyError:
         zone_markers = "None"
-        
 
-    return render_template('index.html', error = "No", platform=f"{platform}", destination = f"{destination}", vehicle_name = f"{vehicle_name}",departure_time = f"{departure_time}",facilities = f"{facilities}",composition_occupancy = f"{composition_data['occupancy']}",composition_carriages = f"{composition_data['carriages_count']}",carriages = f"{carriages}",position_info = f"{position_info}", zone_markers = f"{zone_markers}", next_destination = f"{next_destination}", next_departure_time = f"{next_departure_time}")
+    return render_template('index.html', error="No", platform=f"{platform}", destination=f"{destination}",
+                           vehicle_name=f"{vehicle_name}", departure_time=f"{departure_time}",
+                           facilities=f"{facilities}", composition_occupancy=f"{composition_data['occupancy']}",
+                           composition_carriages=f"{composition_data['carriages_count']}", carriages=f"{carriages}",
+                           position_info=f"{position_info}", zone_markers=f"{zone_markers}",
+                           next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}",
+                           bikes=bikes)
