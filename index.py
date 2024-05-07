@@ -221,7 +221,7 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 1
+    platform = 8
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     #return(f"{standstill_position}")
@@ -242,6 +242,7 @@ def index():
     carriages_info = []
     for carriage in composition_data["carriages"]:
         carriage_type = carriage["carriage_type"]
+        carriage_classe = carriage["classes"]
         model = carriage["model"]
         facilities = carriage["facilities"]
         carriage_info = model
@@ -251,7 +252,7 @@ def index():
             carriage_info += " (Accessible toilet)"
         elif "toilet" in facilities:
             carriage_info += " (Toilet)"
-
+        carriage_info += f" - {carriage_classe}"
         carriages_info.append(carriage_info)
 
     carriages = ", ".join(carriages_info)
