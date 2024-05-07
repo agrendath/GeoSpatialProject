@@ -20,8 +20,8 @@
                     <p>{{ error }}</p>
                 </div>
             </div>
-            {% else %}
-                <h1 class="yellow">{{ destination }}</h1>
+        {% else %}
+            <h1 class="yellow">{{ destination }}</h1>
             <!--<h2>Next departure</h2>
                 <p>Destination: {{ destination }}</p>
                 <p>Vehicle name: {{ vehicle_name }}</p>
@@ -37,11 +37,77 @@
                 <p>{{ position_info }}</p>
             <h2>Zones</h2>
                 <p>{{ zone_markers }}</p>
-                            <div class="barre"> |A|B|C|D|E|</div>
-            <div class="train"> </div>
+            <div class="barre"> |A|B|C|D|E|</div>
+                <div class="train"> 
+                    <!-- Si début e  -->
+                    {% if composition_carriages == "10" %} 
+                    <div class="cb" id="c1"> </div><div class="cb" id="c2"> </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% elif composition_carriages == "9" %} 
+                    <div class="cw" id="c1"> </div><div class="cb" id="c2"> </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% elif composition_carriages == "8" %} 
+                    <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% elif composition_carriages == "7" %} 
+                    <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "6" %} 
+                    <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "5" %} 
+                    <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "4" %} 
+                    <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "3" %} 
+                    <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "2" %} 
+                    <div class="cw" id="c1"> </div><div class="cw" id="c2"> </div><div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cw" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% endif %} 
+                    <!-- Trouver une manière responsive à la place 
+                    <!-- Si début d 
+                    {% if composition_carriages == "8" %} 
+                    </div><div class="cb" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% elif composition_carriages == "7" %} 
+                    </div><div class="cw" id="c3"> </div><div class="cb" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "6" %} 
+                    <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "5" %} 
+                    <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "4" %} 
+                    <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "3" %} 
+                    <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "2" %} 
+                    <div class="cw" id="c3"> </div><div class="cw" id="c4"> </div><div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cw" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% endif %} 
+                    <!-- Si début c 
+                   {% if composition_carriages == "6" %} 
+                    <div class="cb" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "5" %} 
+                    <div class="cw" id="c5"> </div><div class="cb" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "4" %} 
+                    <div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "3" %} 
+                    <div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "2" %} 
+                    <div class="cw" id="c5"> </div><div class="cw" id="c6"> </div><div class="cw" id="c7"> </div><div class="cw" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% endif %} 
+                    <!-- Si début b 
+                   {% if composition_carriages == "4" %} 
+                    <div class="cb" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "3" %} 
+                    <div class="cw" id="c7"> </div><div class="cb" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                   {% elif composition_carriages == "2" %} 
+                    <div class="cw" id="c7"> </div><div class="cw" id="c8"> </div><div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% endif %} 
+                    <!-- Si début a 
+                   {% if composition_carriages == "2" %} 
+                    <div class="cb" id="c9"> </div><div class="cb" id="c10"> </div>
+                    {% endif %} -->
+                </div>
         {% endif %}
         <footer>
-			<p><strong>Next train : </strong> {{next_departure_time}} <span class="yellow"> {{ next_destination }} </span> </p>
+            {% if next_departure_time != "None" and next_departure_time != "None" %}
+                <p><strong>Next train : </strong> {{next_departure_time}} <span class="yellow"> {{ next_destination }} </span> </p>
+            {% else %}
+                <p><strong>No next train ! This is the last !</strong></p>
+            {% endif %}
         </footer>
         </body>
 </html>
