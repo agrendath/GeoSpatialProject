@@ -1,20 +1,50 @@
 <html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-		<script type="text/javascript" src="{{ url_for('static', filename='script/script.js') }}"></script>
-	</head>
-	
-	<body>
-		<h2>Next departure</h2>	
-        		<p>Destination: {{ destination }}</p>
-        		<p>Vehicle name: {{ vehicle_name }}</p>
-        		<p>Departure time: {{ departure_time }}</p>
-		<h2>Train composition</h2>
-			<p>Facilities: {{ facilities }}</p>
-			<p>Occupancy: {{ composition_occupancy }}</p>
-			<p>Number of carriages: {{ composition_carriages }}</p>
-			<p>Carriages: {{ carriages }}</p>
-		<h2>Standstill position</h2>
-        		<p>{{ position_info }}</p>		
-	</body>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <title>Project</title>
+    </head>
+
+    <body>
+        <header>
+            {% if error == "No" %}
+                <h1>{{ departure_time }}<h1>
+            {% else %}
+                <h1>No train<h1>
+            {% endif %}
+            <h1>S{{ platform }}</h1>
+        </header>
+        {% if error != "No" %}
+            <div class="bodywarning">
+                <div class="warning">
+                    <p>{{ error }}</p>
+                </div>
+            </div>
+        {% else %}
+            <h1 class="yellow">{{ destination }}</h1>
+            <!--<h2>Next departure</h2>
+                <p>Destination: {{ destination }}</p>
+                <p>Vehicle name: {{ vehicle_name }}</p>
+                <p>Departure time: {{ departure_time }}</p> -->
+            <p>This train will stop at :</p>
+            <p> <b>AJOUTER LA LISTE DES ARRETS</b> </p>
+            <h2>Train composition</h2>
+                <p>Facilities: {{ facilities }}</p>
+                <p>Occupancy: {{ composition_occupancy }}</p>
+                <p>Number of carriages: {{ composition_carriages }}</p>
+                <p>Carriages: {{ carriages }}</p>
+            <h2>Zones</h2>
+                <p>{{ zone_markers }}</p>
+            <div id="variables" data-flask-variable="{{ carriages }}"></div>
+            <div id="tchoutchou"><script type="text/javascript" src="{{ url_for('static', filename='script/script.js') }}"></script></div>
+
+        {% endif %}
+        <footer>
+            {% if next_departure_time != "None" and next_departure_time != "None" %}
+                <p><strong>Next train : </strong> {{next_departure_time}} <span class="yellow"> {{ next_destination }} </span> </p>
+            {% else %}
+                <p><strong>No next train ! This is the last !</strong></p>
+            {% endif %}
+        </footer>
+        </body>
 </html>
