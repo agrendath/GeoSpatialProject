@@ -288,8 +288,8 @@ def index():
         zone_markers = "None"
 
     return render_template('index.html', error="No", platform=f"{platform}", destination=f"{destination}",
-                           vehicle_name=f"{vehicle_name}", departure_time=f"{departure_time}",
+                           departure_time=f"{departure_time}",
                            facilities=f"{facilities}", composition_occupancy=f"{composition_data['occupancy']}",
-                           composition_carriages=f"{composition_data['carriages_count']}", carriages=f"{carriages}",
-                           position_info=f"{position_info}", zone_markers=f"{zone_markers}",
+                           carriages=carriages,
+                           position_info=f"{position_info}", zone_markers=zone_markers,
                            next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}")

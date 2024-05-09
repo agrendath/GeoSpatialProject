@@ -64,27 +64,60 @@ h1 {
 
 
 .cb{
-    height: 30px;
+    /*height: 30px;*/
+    height: 50px;
     margin-right: 4.8px;
     background:#003058;
     flex: 1; /* Chaque élément aura la même largeur */
     margin: 5px; 
+    position: relative;
 }
-
+/*
 .cw{
     width: 84.7px;
     height: 30px;
     margin-right: 4.8px;
     background:#ffffff;
 }
+*/
 
+.right-top{
+    position: absolute;
+    top:10%;
+    right:1%;
+}
 
+.left-top{
+    position: absolute;
+    top:10%;
+    left:1%;
+}
 
-#c10{
+.left-bottom{
+    position: absolute;
+    bottom:10%;
+    left:1%;
+}
+
+.middle{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.locoR{
     -webkit-border-radius: 0px 800px 70px 0px;
     -moz-border-radius: 0px 800px 70px 0px;
     border-radius: 0px 800px 70px 0px;
 }
+
+.locoL{
+    -webkit-border-radius: 800px 0px 0px 70px;
+    -moz-border-radius: 800px 0px 0px 70px;
+    border-radius: 800px 0px 0px 70px;
+}
+
 #container{
     min-height: 100px;
     background-color: aliceblue;

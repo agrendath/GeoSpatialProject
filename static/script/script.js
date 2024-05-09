@@ -8,28 +8,31 @@ zones.setAttribute('id', 'zones');
 container.appendChild(zones)
 container.appendChild(train)
 
-//affichage des zones
-zones_names = "A,B,C,D,E"
-zones_names = zones_names.split(",")
 
-zones_names.forEach((zone)=>{
-    div = document.createElement("div")
-    div.setAttribute('class', 'zone')
-    div.textContent = zone
-    zones.appendChild(div)
-})
 
-var variablesElement = document.getElementById('variables');
+//var variablesElement = document.getElementById('variables');
 
-//var carriages = variablesElement.dataset.flaskVariable;//.split(",");
+var carriagesElement = document.getElementById('carriages');
+var zone_markersElement = document.getElementById('zone_markers');
 
-var carriages2 = variablesElement.dataset.flaskVariable;
+var carriagesText = carriagesElement.dataset.flaskVariable;
 
-var expression = /,(?![^\[\]]*])/;
+var zone_markersText = zone_markersElement.dataset.flaskVariable;
 
-var carriages = carriages2.split(expression);
+
+var carriages = carriagesText.split(/,(?![^\[\]]*])/);
+
+zone_markersText =  zone_markersText.split("Decimal('")
+zone_markersText =  zone_markersText.join("")
+zone_markersText =  zone_markersText.split("')")
+zone_markersText =  zone_markersText.join("")
+zone_markersText =  zone_markersText.split("'")
+zone_markersText =  zone_markersText.join('"')
+
+var zone_markersJSON = JSON.parse(zone_markersText);
 
 console.log(carriages)
+console.log(zone_markersJSON)
 
 nb_carriages = carriages.length
 //var nb_carriages = composition_carriages
@@ -41,10 +44,29 @@ console.log(nb_carriages)
     }
 }*/
 
+/*//affichage des zones
+zones_names = "A,B,C,D,E"
+zones_names = zones_names.split(",")
+
+zones_names.forEach((zone)=>{
+    div = document.createElement("div")
+    div.setAttribute('class', 'zone')
+    div.textContent = zone
+    zones.appendChild(div)
+})*/
+
+zone_markersJSON.forEach((element)=>{
+    div = document.createElement("div")
+    div.setAttribute('class', 'zone')
+    div.textContent = element.ref
+    zones.appendChild(div)
+})
+
 carriages.forEach((carriage)=>{
     div = document.createElement("div")
     div.setAttribute('class', 'cb')
     div.setAttribute('style', 'width='+100/nb_carriages+"%")
+
 
     console.log(carriage)
     
@@ -63,11 +85,14 @@ carriages.forEach((carriage)=>{
     
    //Classes
    if (carriage.includes("[1]")) {
-        div.innerHTML += "<div class='yellow'>1</div>";
+        div.innerHTML += "<div class='middle'><span class='yellow'>1</span></div>";
     }else if (carriage.includes("[2]")) {
-        div.innerHTML += "<div>2</div>";
+        div.innerHTML += "<div class='middle'>2</div>";
     }else if (carriage.includes("[1, 2]")) {
-        div.innerHTML += "<div><span class='yellow'>1</span>2</div>";
+        div.innerHTML += "<div class='middle'><span class='yellow'>1</span>2</div>";
+    }else  {
+         div.classList.add('locoR');  //décider lequel à appliquer (selon le sens du train) + des fois carriages sans classes
+         div.classList.add('locoL');         
     }
     
     train.appendChild(div)

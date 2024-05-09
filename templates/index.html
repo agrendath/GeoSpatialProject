@@ -24,18 +24,18 @@
             <h1 class="yellow">{{ destination }}</h1>
             <!--<h2>Next departure</h2>
                 <p>Destination: {{ destination }}</p>
-                <p>Vehicle name: {{ vehicle_name }}</p>
                 <p>Departure time: {{ departure_time }}</p> -->
             <p>This train will stop at :</p>
             <p> <b>AJOUTER LA LISTE DES ARRETS</b> </p>
             <h2>Train composition</h2>
                 <p>Facilities: {{ facilities }}</p>
                 <p>Occupancy: {{ composition_occupancy }}</p>
-                <p>Number of carriages: {{ composition_carriages }}</p>
                 <p>Carriages: {{ carriages }}</p>
             <h2>Zones</h2>
                 <p>{{ zone_markers }}</p>
-            <div id="variables" data-flask-variable="{{ carriages }}"></div>
+            <!--<div id="variables" data-flask-variable="{{ carriages }}"></div>-->
+            <div id="carriages" data-flask-variable="{{ carriages }}"></div>
+            <div id="zone_markers" data-flask-variable="{{ zone_markers }}"></div>
             <div id="tchoutchou"><script type="text/javascript" src="{{ url_for('static', filename='script/script.js') }}"></script></div>
 
         {% endif %}
