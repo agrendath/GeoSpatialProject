@@ -62,7 +62,9 @@ zone_markersJSON.forEach((element)=>{
     zones.appendChild(div)
 })
 
-carriages.forEach((carriage)=>{
+var locoLeft = false;
+var locoRight = false;
+carriages.forEach((carriage, index)=>{
     div = document.createElement("div")
     div.setAttribute('class', 'cb')
     div.setAttribute('style', 'width='+100/nb_carriages+"%")
@@ -91,13 +93,37 @@ carriages.forEach((carriage)=>{
     }else if (carriage.includes("[1, 2]")) {
         div.innerHTML += "<div class='middle'><span class='yellow'>1</span>2</div>";
     }else  {
-         div.classList.add('locoR');  //décider lequel à appliquer (selon le sens du train) + des fois carriages sans classes
-         div.classList.add('locoL');         
+        if (index === 0) { 
+            div.classList.add('locoL');
+            locoLeft = true;
+        } else {
+            div.classList.add('locoR');     
+            locoRight = true; 
+        }   
     }
     
     train.appendChild(div)
 })
 
+var arr = document.createElement('div');
+arr.setAttribute('id', 'arr'); 
+arr.setAttribute('class', 'cb')
+
+if (locoLeft && !locoRight) { 
+   arr.innerHTML = "<i class='fa fa-arrow-left'></i>";
+   console.log("1")
+} else if (!locoLeft && locoRight) { 
+   arr.innerHTML = "<i class='fa fa-arrow-right'></i>";
+   console.log("2")
+} else if (locoLeft && locoRight) { 
+   arr.innerHTML = "<i class='fa fa-arrow-left'></i><i class='fa fa-arrow-right'></i>";
+   console.log("3")
+} else {
+   arr.innerHTML = "<i class='fa fa-arrow-right'></i>";
+   console.log("4")
+}
+
+train.appendChild(arr)
 
 tchou = document.getElementById('tchoutchou');
 tchou.appendChild(container)

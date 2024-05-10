@@ -22,17 +22,29 @@
             </div>
         {% else %}
             <h1 class="yellow">{{ destination }}</h1>
-            <!--<h2>Next departure</h2>
-                <p>Destination: {{ destination }}</p>
-                <p>Departure time: {{ departure_time }}</p> -->
+            
             <p>This train will stop at :</p>
-            <p> <b>AJOUTER LA LISTE DES ARRETS</b> </p>
-            <h2>Train composition</h2>
-                <p>Facilities: {{ facilities }}</p>
-                <p>Occupancy: {{ composition_occupancy }}</p>
-                <p>Carriages: {{ carriages }}</p>
-            <h2>Zones</h2>
-                <p>{{ zone_markers }}</p>
+                <p><b style="color:orange">AJOUTER LA LISTE DES ARRETS</b> </p>
+            
+            <h2 style="color:red">A supprimer si pas d'autres infos qui pop</h2>
+            <p style="color:red"><b>Facilities: {{ facilities }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            Occupancy: {{ composition_occupancy }}</b></p>
+
+            <p> Confort advantages : 
+                {% for advantage in facilities %}
+                    {% if advantage ==  'airconditioning'%}
+                        <i class="fa fa-fan"></i>
+                    {% elif advantage ==  'heating'%}
+                        <i class="fa fa-temperature-high"></i>
+                    {% endif %}
+                {% endfor%}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                Occupancy : {{composition_occupancy}}
+            </p>
+            
+            <p>Carriages: {{ carriages }}</p>
+            <p>{{ zone_markers }}</p>
+            
             <!--<div id="variables" data-flask-variable="{{ carriages }}"></div>-->
             <div id="carriages" data-flask-variable="{{ carriages }}"></div>
             <div id="zone_markers" data-flask-variable="{{ zone_markers }}"></div>

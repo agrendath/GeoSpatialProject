@@ -289,7 +289,7 @@ def index():
 
     return render_template('index.html', error="No", platform=f"{platform}", destination=f"{destination}",
                            departure_time=f"{departure_time}",
-                           facilities=f"{facilities}", composition_occupancy=f"{composition_data['occupancy']}",
+                           facilities=facilities, composition_occupancy=f"{composition_data['occupancy']}",
                            carriages=carriages,
                            position_info=f"{position_info}", zone_markers=zone_markers,
                            next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}")
