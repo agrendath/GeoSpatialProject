@@ -32,40 +32,9 @@ zone_markersText =  zone_markersText.join('"')
 
 var zone_markersJSON = JSON.parse(zone_markersText);
 
-console.log(carriages)
-console.log(zone_markersJSON)
-
 nb_carriages = carriages.length
-//var nb_carriages = composition_carriages
-console.log(nb_carriages)
 
-/*displayImages(div,carriage){
-    if (condition) {
-        
-    }
-}*/
-
-/*//affichage des zones
-zones_names = "A,B,C,D,E"
-zones_names = zones_names.split(",")
-
-zones_names.forEach((zone)=>{
-    div = document.createElement("div")
-    div.setAttribute('class', 'zone')
-    div.textContent = zone
-    zones.appendChild(div)
-})*/
-
-/*zone_markersJSON.forEach((element)=>{
-    div = document.createElement("div")
-    div.setAttribute('class', 'zone')
-    div.textContent = element.ref
-    zones.appendChild(div)
-})
-*/
-
-
-const groupedZones = {};
+/*const groupedZones = {};
 zone_markersJSON.forEach(element => {
     if (!groupedZones[element.ref]) {
         groupedZones[element.ref] = [];
@@ -85,22 +54,64 @@ Object.keys(groupedZones).forEach(ref => {
     }
 
     zones.appendChild(div);
+});*/
+
+
+//interverti
+function isAntiAlphabetical(keys) {
+    for (let i = 1; i < keys.length; i++) {
+        if (keys[i] > keys[i - 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+var invert = false;
+
+const groupedZones = {};
+zone_markersJSON.forEach(element => {
+    if (!groupedZones[element.ref]) {
+        groupedZones[element.ref] = [];
+    }
+    groupedZones[element.ref].push(element);
 });
 
-/*const extraDiv = document.createElement("div");
-extraDiv.style.backgroundColor = "#0065af";
-extraDiv.style.width = "10px";
-zones.appendChild(extraDiv);
-*/
-var locoLeft = false;
-var locoRight = false;
+const keys = Object.keys(groupedZones);
+
+if (isAntiAlphabetical(keys)) {
+    invert = true;
+}
+
+if (invert) {
+    keys.reverse();
+}
+
+keys.forEach(ref => {
+    const elements = groupedZones[ref];
+    let totalOccurences = elements.length;
+    const div = document.createElement("div");
+    div.setAttribute('class', 'zone');
+    div.textContent = ref;
+
+    if (totalOccurences > 1) {
+        div.style.flexGrow = totalOccurences;
+    }
+
+    zones.appendChild(div);
+});
+//fin interverti
+
+//interverti
+if (invert) {
+    carriages.reverse();
+}
+//fin interverti
+
 carriages.forEach((carriage, index)=>{
     div = document.createElement("div")
     div.setAttribute('class', 'cb')
     div.setAttribute('style', 'width='+100/nb_carriages+"%")
-
-
-    console.log(carriage)
     
     //Icons
     if (carriage.includes("(Accessible toilet)")) {
@@ -118,8 +129,7 @@ carriages.forEach((carriage, index)=>{
     if (carriage.includes("(Luggage lockers)")) {
         div.innerHTML += "<div class='right-bottom'><i class='fa fa-lock'></i></div>";
     }
-
-    
+ 
    //Classes
    if (carriage.includes("[1]")) {
         div.innerHTML += "<div class='middle'><span class='yellow'>1</span></div>";
@@ -130,37 +140,35 @@ carriages.forEach((carriage, index)=>{
     }else  {
         if (index === 0) { 
             div.classList.add('locoL');
-            locoLeft = true;
         } else {
             div.classList.add('locoR');     
-            locoRight = true; 
         }   
     }
     
     train.appendChild(div)
 })
 
+
 var arr = document.createElement('div');
 arr.setAttribute('class', 'arrow'); 
 
-
-if (directionText === "left") { 
-   arr.innerHTML = "<i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i>";
-} else if (directionText === "right") { 
-   arr.innerHTML = "<i class='fa fa-arrow-right'></i><i class='fa fa-arrow-right'></i><i class='fa fa-arrow-right'></i>";
+//interverti
+if (invert) { //interverti
+    if (directionText === "left") { 
+        directionText = "right"
+    } else if (directionText === "right") { 
+        directionText = "left"
+    } 
 } 
 
-/*
-if (locoLeft && !locoRight) { 
-   arr.innerHTML = "<i class='fa fa-arrow-left'></i>";
-} else if (!locoLeft && locoRight) { 
-   arr.innerHTML = "<i class='fa fa-arrow-right'></i>";
-} else if (locoLeft && locoRight) { 
-   arr.innerHTML = "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;&nbsp;<i class='fa fa-arrow-right'></i> (devinez le sens)";
-} else {
-   arr.innerHTML = "Aucune loco, en ajouter combien ? + <i class='fa fa-arrow-left'></i>&nbsp;&nbsp;&nbsp;<i class='fa fa-arrow-right'></i> (devinez le sens)";
-}
-*/
+//fin interverti
+
+if (directionText === "left") { 
+    arr.innerHTML = "<i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i>";
+} else if (directionText === "right") { 
+    arr.innerHTML = "<i class='fa fa-arrow-right'></i><i class='fa fa-arrow-right'></i><i class='fa fa-arrow-right'></i>";
+} 
+
 container.appendChild(arr)
 
 tchou = document.getElementById('tchoutchou');
