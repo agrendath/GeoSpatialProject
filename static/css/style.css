@@ -1,6 +1,6 @@
 @import url('https://fonts.cdnfonts.com/css/clarendon');
 
-
+/*Page */
 body {
     background-color: #0065af;
     color: white;
@@ -43,6 +43,8 @@ h1 {
     color: #e2e72d;
 }
 
+
+/*No train*/
 .bodywarning {
     display: flex;
     justify-content: center;
@@ -62,7 +64,49 @@ h1 {
 
 
 
+/*Train drawing*/
+.arrow{
+    color:black;
+    background: #DCDCDC;/*#ffffff;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    font-size: 25px;
+    
+}
 
+#container{
+    min-height: 100px;
+    background-color: aliceblue;
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
+}
+
+#zones{
+    display: flex;   
+    background: #DCDCDC;/*#ffffff;*/
+}
+.zone{
+    background-color: #0065af;
+    flex: 1; /* Chaque élément aura la même largeur */
+    margin: 5px; 
+    text-align: center;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 2; 
+}
+
+.zone:first-child {
+    margin-left: 2px;
+}
+
+#train{
+    display: flex;
+}
+
+/*Form carriage*/
 .cb{
     font-weight: bold;
     /*height: 30px;*/
@@ -74,25 +118,19 @@ h1 {
     position: relative;
 }
 
-.arrow{
-    color:black;
-    background: #DCDCDC;/*#ffffff;*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 30px;
-    font-size: 25px;
-    
+.locoR{
+    -webkit-border-radius: 0px 800px 70px 0px;
+    -moz-border-radius: 0px 800px 70px 0px;
+    border-radius: 0px 800px 70px 0px;
 }
-/*
-.cw{
-    width: 84.7px;
-    height: 30px;
-    margin-right: 4.8px;
-    background:#ffffff;
-}
-*/
 
+.locoL{
+    -webkit-border-radius: 800px 0px 0px 70px;
+    -moz-border-radius: 800px 0px 0px 70px;
+    border-radius: 800px 0px 0px 70px;
+}
+
+/*Content carriage*/
 .right-top{
     position: absolute;
     top:10%;
@@ -122,37 +160,4 @@ h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-
-.locoR{
-    -webkit-border-radius: 0px 800px 70px 0px;
-    -moz-border-radius: 0px 800px 70px 0px;
-    border-radius: 0px 800px 70px 0px;
-}
-
-.locoL{
-    -webkit-border-radius: 800px 0px 0px 70px;
-    -moz-border-radius: 800px 0px 0px 70px;
-    border-radius: 800px 0px 0px 70px;
-}
-
-#container{
-    min-height: 100px;
-    background-color: aliceblue;
-    margin-left: auto;
-    margin-right: auto;
-    width: 80%;
-}
-
-#zones{
-    display: flex;
-}
-.zone{
-    background-color: #0065af;
-    flex: 1; /* Chaque élément aura la même largeur */
-    margin: 5px; 
-    text-align: center;
-}
-#train{
-    display: flex;
 }
