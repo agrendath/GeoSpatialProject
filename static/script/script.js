@@ -106,20 +106,19 @@ carriages.forEach((carriage, index)=>{
 })
 
 var arr = document.createElement('div');
-arr.setAttribute('id', 'arr'); 
-arr.setAttribute('class', 'cb')
+arr.setAttribute('class', 'arrow'); 
 
 if (locoLeft && !locoRight) { 
    arr.innerHTML = "<i class='fa fa-arrow-left'></i>";
 } else if (!locoLeft && locoRight) { 
    arr.innerHTML = "<i class='fa fa-arrow-right'></i>";
 } else if (locoLeft && locoRight) { 
-   arr.innerHTML = "<i class='fa fa-arrow-left'></i><i class='fa fa-arrow-right'></i>";
+   arr.innerHTML = "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;&nbsp;<i class='fa fa-arrow-right'></i> (devinez le sens)";
 } else {
-   arr.innerHTML = "Aucune loco";
+   arr.innerHTML = "Aucune loco, en ajouter combien ?";
 }
 
-train.appendChild(arr)
+container.appendChild(arr)
 
 tchou = document.getElementById('tchoutchou');
 tchou.appendChild(container)
