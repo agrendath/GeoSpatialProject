@@ -44,14 +44,18 @@ def formatConnections(connections, departure):
             stops = connection["departure"]["stops"]
 
     if stops is None:
-        return []
+        return ([], None)
 
     final = []
     for stop in stops["stop"]:
         final.append(stop["station"])
 
     print("[DEBUG] Stops of the train: " + str(final))
-    return (final, stops["stop"][0])
+    if final == []:
+        first_stop = None
+    else:
+        first_stop = stops["stop"][0]
+    return (final, first_stop)
 
 def getConnections(station_from, station_to):
     url = "http://api.irail.be/connections"
@@ -294,7 +298,7 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 1
+    platform = 6
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     # return(f"{standstill_position}")
@@ -322,7 +326,8 @@ def index():
     (stops, first_stop) = formatConnections(connections, standstill_position["departure"])
 
     direction = getDirection(standstill_position["zone_markers"], first_stop)
-    print("[DEBUG] First stop: " + str(first_stop["station"]))
+    if first_stop is not None:
+        print("[DEBUG] First stop: " + str(first_stop["station"]))
     print("[DEBUG] Zone markers: " + str(standstill_position["zone_markers"]))
     print("[DEBUG] Determined direction: " + direction)
 

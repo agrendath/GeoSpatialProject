@@ -14,10 +14,11 @@ container.appendChild(train)
 
 var carriagesElement = document.getElementById('carriages');
 var zone_markersElement = document.getElementById('zone_markers');
+var directionElement = document.getElementById('direction');
 
 var carriagesText = carriagesElement.dataset.flaskVariable;
-
 var zone_markersText = zone_markersElement.dataset.flaskVariable;
+var directionText = directionElement.dataset.flaskVariable;
 
 
 var carriages = carriagesText.split(/,(?![^\[\]]*])/);
@@ -113,6 +114,15 @@ carriages.forEach((carriage, index)=>{
 var arr = document.createElement('div');
 arr.setAttribute('class', 'arrow'); 
 
+zone_markersText
+if (directionText === "left") { 
+   arr.innerHTML = "<i class='fa fa-arrow-left'></i>";
+} else if (directionText === "right") { 
+   arr.innerHTML = "<i class='fa fa-arrow-right'></i>";
+} else { 
+   arr.innerHTML = "??";
+} 
+/*
 if (locoLeft && !locoRight) { 
    arr.innerHTML = "<i class='fa fa-arrow-left'></i>";
 } else if (!locoLeft && locoRight) { 
@@ -122,7 +132,7 @@ if (locoLeft && !locoRight) {
 } else {
    arr.innerHTML = "Aucune loco, en ajouter combien ? + <i class='fa fa-arrow-left'></i>&nbsp;&nbsp;&nbsp;<i class='fa fa-arrow-right'></i> (devinez le sens)";
 }
-
+*/
 container.appendChild(arr)
 
 tchou = document.getElementById('tchoutchou');
