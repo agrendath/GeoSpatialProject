@@ -73,7 +73,11 @@ h1 {
     align-items: center;
     height: 30px;
     font-size: 25px;
-    
+}
+
+.arrow i {
+    margin-left: 16.6%;
+    margin-right: 16.6%;
 }
 
 #container{

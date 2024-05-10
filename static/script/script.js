@@ -143,14 +143,13 @@ carriages.forEach((carriage, index)=>{
 var arr = document.createElement('div');
 arr.setAttribute('class', 'arrow'); 
 
-zone_markersText
+
 if (directionText === "left") { 
-   arr.innerHTML = "<i class='fa fa-arrow-left'></i>";
+   arr.innerHTML = "<i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i>";
 } else if (directionText === "right") { 
-   arr.innerHTML = "<i class='fa fa-arrow-right'></i>";
-} else { 
-   arr.innerHTML = "??";
+   arr.innerHTML = "<i class='fa fa-arrow-right'></i><i class='fa fa-arrow-right'></i><i class='fa fa-arrow-right'></i>";
 } 
+
 /*
 if (locoLeft && !locoRight) { 
    arr.innerHTML = "<i class='fa fa-arrow-left'></i>";

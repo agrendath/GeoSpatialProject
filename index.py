@@ -7,15 +7,21 @@ from geopy import distance
 
 import composition
 
+overpass_api = overpy.Overpass()
+
 def computeDistance(location1, location2):
     return distance.distance(location1, location2).m
 
-def getDirection(zone_markers, first_stop):
+def getDirection(zone_markers, first_stop, departure):
     if len(zone_markers) < 2:
         return "unknown"
     if first_stop is None:
-        return "unknown"
-    nextLocation = (first_stop["stationinfo"]["locationY"], first_stop["stationinfo"]["locationX"])
+        print("[DEBUG] No intermediary stops found, taking terminal stop to calculate direction")
+        nextLocation = (departure["stationinfo"]["locationY"], departure["stationinfo"]["locationX"])
+    else:
+        print("[DEBUG] Intermediary stops found, taking first stop to calculate direction")
+        nextLocation = (first_stop["stationinfo"]["locationY"], first_stop["stationinfo"]["locationX"])
+
     firstZone = (zone_markers[0]["lat"], zone_markers[0]["lon"])
     lastZone = (zone_markers[-1]["lat"], zone_markers[-1]["lon"])
 
@@ -29,8 +35,6 @@ def getDirection(zone_markers, first_stop):
         return "left"
     else:
         return "right"
-
-overpass_api = overpy.Overpass()
 
 def formatConnections(connections, departure):
     id = departure["departureConnection"]
@@ -302,7 +306,7 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 6
+    platform = 1
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     # return(f"{standstill_position}")
@@ -329,7 +333,7 @@ def index():
     connections = getConnections(station, destination)
     (stops, first_stop) = formatConnections(connections, standstill_position["departure"])
 
-    direction = getDirection(standstill_position["zone_markers"], first_stop)
+    direction = getDirection(standstill_position["zone_markers"], first_stop, standstill_position["departure"])
     if first_stop is not None:
         print("[DEBUG] First stop: " + str(first_stop["station"]))
     print("[DEBUG] Zone markers: " + str(standstill_position["zone_markers"]))
