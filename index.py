@@ -236,17 +236,7 @@ def index():
 
     # return(f"{standstill_position}")
     # standstill_position = None   #test with no standstill_position if standstill_position
-    standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989',
-                           'departure_time': '19:10',
-                           'composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low',
-                                           'carriages_count': 10, 'carriages': [
-                                   {'carriage_type': 'left-wagon', 'model': 'AM08P_c', 'classes': [1, 2],
-                                    'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4},
-                                   {'carriage_type': '', 'model': 'AM08P_b', 'classes': [2], 'facilities': [],
-                                    'carriage_size': 18.4},
-                                   {'carriage_type': 'middle-wagon', 'model': 'AM08P_a', 'classes': [1, 2],
-                                    'facilities': [], 'carriage_size': 18.4}]},
-                           'standstill_position': None}  # test with standstill_position if no standstill_position
+    #standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989','departure_time': '19:10','composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 10, 'carriages': [ {'carriage_type': 'left-wagon', 'model': 'AM08P_c', 'classes': [1, 2],'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08P_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4},{'carriage_type': 'middle-wagon', 'model': 'AM08P_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}]},'standstill_position': None}  # test with standstill_position if no standstill_position
 
     if standstill_position is None:
         return render_template('index.html', platform=f"{platform}",
@@ -265,9 +255,6 @@ def index():
         next_departure_time = "None"
 
     carriages_info = []
-    bikes = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
-    toilets = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
-    a_toilets = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
     i = 0
     for carriage in composition_data["carriages"]:
         carriage_type = carriage["carriage_type"]
@@ -278,13 +265,10 @@ def index():
         carriage_info = model
         if "bike" in facilities:
             carriage_info += " (Bike)"
-            bikes[i] = "ok"
         if "accessible_toilet" in facilities:
             carriage_info += " (Accessible toilet)"
-            a_toilets[i] = "ok"
         elif "toilet" in facilities:
             carriage_info += " (Toilet)"
-            toilets[i] = "ok"
 
         carriage_info += f" - {carriage_classes}"
         carriages_info.append(carriage_info)
@@ -308,5 +292,4 @@ def index():
                            facilities=f"{facilities}", composition_occupancy=f"{composition_data['occupancy']}",
                            composition_carriages=f"{composition_data['carriages_count']}", carriages=f"{carriages}",
                            position_info=f"{position_info}", zone_markers=f"{zone_markers}",
-                           next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}",
-                           bikes=bikes)
+                           next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}")
