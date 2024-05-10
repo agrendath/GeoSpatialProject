@@ -111,16 +111,12 @@ arr.setAttribute('class', 'cb')
 
 if (locoLeft && !locoRight) { 
    arr.innerHTML = "<i class='fa fa-arrow-left'></i>";
-   console.log("1")
 } else if (!locoLeft && locoRight) { 
    arr.innerHTML = "<i class='fa fa-arrow-right'></i>";
-   console.log("2")
 } else if (locoLeft && locoRight) { 
    arr.innerHTML = "<i class='fa fa-arrow-left'></i><i class='fa fa-arrow-right'></i>";
-   console.log("3")
 } else {
-   arr.innerHTML = "<i class='fa fa-arrow-right'></i>";
-   console.log("4")
+   arr.innerHTML = "Aucune loco";
 }
 
 train.appendChild(arr)
