@@ -42,7 +42,7 @@ class Carriage(pydantic.BaseModel):
 
 
 class Train(pydantic.BaseModel):
-    facilities: list[Literal["airconditioning", "heating"]]
+    facilities: list[Literal["airconditioning", "heating", "NoneType"]]
     occupancy: Literal["low", "medium", "high"]
     carriages_count: int
     carriages: list[Carriage]

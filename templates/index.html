@@ -24,12 +24,13 @@
             <h1 class="yellow">{{ destination }}</h1>
             
             <p>This train will stop at :</p>
-                <p><b style="color:orange">AJOUTER LA LISTE DES ARRETS</b> </p>
+            	<p>
+            	    {% for stop in stops %}
+            	        {{stop}} <b>-</b>
+            	    {% endfor%}
+            	    <span class="yellow">{{ destination }}</span>
+            	</p>
             
-            <h2 style="color:red">A supprimer si pas d'autres infos qui pop</h2>
-            <p style="color:red"><b>Facilities: {{ facilities }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            Occupancy: {{ composition_occupancy }}</b></p>
-
             <p> Confort advantages : 
                 {% for advantage in facilities %}
                     {% if advantage ==  'airconditioning'%}
@@ -41,7 +42,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                 Occupancy : {{composition_occupancy}}
             </p>
-            
+            <h2>Infos</h2>
             <p>Carriages: {{ carriages }}</p>
             <p>{{ zone_markers }}</p>
             

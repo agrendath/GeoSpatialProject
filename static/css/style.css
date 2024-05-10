@@ -99,6 +99,12 @@ h1 {
     right:1%;
 }
 
+.right-bottom{
+    position: absolute;
+    bottom:10%;
+    right:1%;
+}
+
 .left-top{
     position: absolute;
     top:10%;

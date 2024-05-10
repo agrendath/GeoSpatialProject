@@ -85,13 +85,18 @@ carriages.forEach((carriage, index)=>{
         div.innerHTML += "<div class='right-top'><i class='fa fa-bicycle'></i></div>";
     }
     
+    if (carriage.includes("(Luggage lockers)")) {
+        div.innerHTML += "<div class='right-bottom'><i class='fa fa-lock'></i></div>";
+    }
+
+    
    //Classes
    if (carriage.includes("[1]")) {
         div.innerHTML += "<div class='middle'><span class='yellow'>1</span></div>";
     }else if (carriage.includes("[2]")) {
         div.innerHTML += "<div class='middle'>2</div>";
     }else if (carriage.includes("[1, 2]")) {
-        div.innerHTML += "<div class='middle'><span class='yellow'>1</span>2</div>";
+        div.innerHTML += "<div class='middle'><span class='yellow'>1</span>, 2</div>";
     }else  {
         if (index === 0) { 
             div.classList.add('locoL');
