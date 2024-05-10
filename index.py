@@ -8,6 +8,43 @@ import composition
 
 overpass_api = overpy.Overpass()
 
+def formatConnections(connections, departure):
+    id = departure["departureConnection"]
+    stops = None
+    #print(str(connections))
+    for connection in connections["connection"]:
+        #print("---------------------------------- Dep: " + str(connection))
+        if connection["departure"] is None or connection["departure"]["departureConnection"] is None:
+            continue
+        if connection["departure"]["departureConnection"] == id:
+            stops = connection["departure"]["stops"]
+
+    if stops is None:
+        return []
+
+    final = []
+    for stop in stops["stop"]:
+        final.append(stop["station"])
+
+    print("[DEBUG] Stops of the train: " + str(final))
+    return final
+
+def getConnections(station_from, station_to):
+    url = "http://api.irail.be/connections"
+    params = {"from": station_from, "to": station_to, "format": "json"}
+    response = requests.get(url, params=params)
+    response = response.json()
+    if response is None:
+        print("[ERROR] Something went wrong while getting the connections")
+        return None
+    if "error" in response:
+        print("[ERROR] Something went wrong while getting the connections:", response["message"])
+        return None
+    #print("[DEBUG] Connections:", response)
+    #for temp in response["connection"]:
+        #print(" --- " + str(temp))
+        #print(" ---------------------------------------------------------------------------")
+    return response
 
 def getLiveboard(station):
     url = "http://api.irail.be/liveboard"
@@ -63,6 +100,7 @@ def getNextDeparture(station, platform):
     departures = liveboard["departures"]["departure"]
     for departure in departures:
         if departure["platform"] != "?" and int(departure["platform"]) == platform:
+            print("[DEBUG] Departure: " + str(departure))
             return departure
     print("[ERROR] NO DEPARTURE FOUND")
     return None  # No departure found
@@ -221,7 +259,8 @@ def getStandstillPosition(station, overpass_station_name, platform):
         "next_departure_time": datetime.fromtimestamp(int(next_departure["time"])).strftime("%H:%M"),
         "next_composition": next_composition_data,
         "standstill_position": standstill_position,
-        "zone_markers": track_zone_markers
+        "zone_markers": track_zone_markers,
+        "departure": departure
     }
 
     return output
@@ -236,7 +275,7 @@ def index():
 
     # return(f"{standstill_position}")
     # standstill_position = None   #test with no standstill_position if standstill_position
-    standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989',
+    """standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989',
                            'departure_time': '19:10',
                            'composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low',
                                            'carriages_count': 10, 'carriages': [
@@ -246,7 +285,7 @@ def index():
                                     'carriage_size': 18.4},
                                    {'carriage_type': 'middle-wagon', 'model': 'AM08P_a', 'classes': [1, 2],
                                     'facilities': [], 'carriage_size': 18.4}]},
-                           'standstill_position': None}  # test with standstill_position if no standstill_position
+                           'standstill_position': None}"""  # test with standstill_position if no standstill_position
 
     if standstill_position is None:
         return render_template('index.html', platform=f"{platform}",
@@ -263,6 +302,9 @@ def index():
     except KeyError:
         next_destination = "None"
         next_departure_time = "None"
+
+    connections = getConnections(station, destination)
+    stops = formatConnections(connections, standstill_position["departure"])
 
     carriages_info = []
     bikes = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
@@ -309,4 +351,4 @@ def index():
                            composition_carriages=f"{composition_data['carriages_count']}", carriages=f"{carriages}",
                            position_info=f"{position_info}", zone_markers=f"{zone_markers}",
                            next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}",
-                           bikes=bikes)
+                           bikes=bikes, stops=f"{stops}")
