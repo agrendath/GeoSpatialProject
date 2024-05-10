@@ -3,8 +3,32 @@ import requests
 from datetime import datetime
 import overpy
 from flask import render_template, request, redirect, url_for
+from geopy import distance
 
 import composition
+
+def computeDistance(location1, location2):
+    return distance.distance(location1, location2).m
+
+def getDirection(zone_markers, first_stop):
+    if len(zone_markers) < 2:
+        return "unknown"
+    if first_stop is None:
+        return "unknown"
+    nextLocation = (first_stop["stationinfo"]["locationY"], first_stop["stationinfo"]["locationX"])
+    firstZone = (zone_markers[0]["lat"], zone_markers[0]["lon"])
+    lastZone = (zone_markers[-1]["lat"], zone_markers[-1]["lon"])
+
+    dist1 = computeDistance(nextLocation, firstZone)
+    dist2 = computeDistance(nextLocation, lastZone)
+
+    print("[DEBUG] Distance to first zone marker: " + str(dist1))
+    print("[DEBUG] Distance to last zone marker: " + str(dist2))
+
+    if dist1 < dist2:
+        return "left"
+    else:
+        return "right"
 
 overpass_api = overpy.Overpass()
 
@@ -27,7 +51,7 @@ def formatConnections(connections, departure):
         final.append(stop["station"])
 
     print("[DEBUG] Stops of the train: " + str(final))
-    return final
+    return (final, stops["stop"][0])
 
 def getConnections(station_from, station_to):
     url = "http://api.irail.be/connections"
@@ -295,7 +319,12 @@ def index():
         next_departure_time = "None"
 
     connections = getConnections(station, destination)
-    stops = formatConnections(connections, standstill_position["departure"])
+    (stops, first_stop) = formatConnections(connections, standstill_position["departure"])
+
+    direction = getDirection(standstill_position["zone_markers"], first_stop)
+    print("[DEBUG] First stop: " + str(first_stop["station"]))
+    print("[DEBUG] Zone markers: " + str(standstill_position["zone_markers"]))
+    print("[DEBUG] Determined direction: " + direction)
 
     carriages_info = []
     for carriage in composition_data["carriages"]:
@@ -337,4 +366,4 @@ def index():
                            carriages=carriages,
                            position_info=f"{position_info}", zone_markers=zone_markers,
                            next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}", 
-                           stops=stops)
+                           stops=stops, direction=f"{direction}")
