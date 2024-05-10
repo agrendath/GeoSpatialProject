@@ -269,6 +269,7 @@ def index():
     toilets = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
     a_toilets = ["None", "None", "None", "None", "None", "None", "None", "None", "None", "None"]
     i = 0
+    nb_carriages = len(composition_data["carriages"])
     for carriage in composition_data["carriages"]:
         carriage_type = carriage["carriage_type"]
         carriage_classes = carriage["classes"]
@@ -309,4 +310,4 @@ def index():
                            composition_carriages=f"{composition_data['carriages_count']}", carriages=f"{carriages}",
                            position_info=f"{position_info}", zone_markers=f"{zone_markers}",
                            next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}",
-                           bikes=bikes)
+                           bikes=bikes, nb_carriages=f"{nb_carriages}")
