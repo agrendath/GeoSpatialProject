@@ -115,7 +115,7 @@ if (locoLeft && !locoRight) {
 } else if (locoLeft && locoRight) { 
    arr.innerHTML = "<i class='fa fa-arrow-left'></i>&nbsp;&nbsp;&nbsp;<i class='fa fa-arrow-right'></i> (devinez le sens)";
 } else {
-   arr.innerHTML = "Aucune loco, en ajouter combien ?";
+   arr.innerHTML = "Aucune loco, en ajouter combien ? + <i class='fa fa-arrow-left'></i>&nbsp;&nbsp;&nbsp;<i class='fa fa-arrow-right'></i> (devinez le sens)";
 }
 
 container.appendChild(arr)

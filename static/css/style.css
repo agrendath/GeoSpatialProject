@@ -76,11 +76,12 @@ h1 {
 
 .arrow{
     color:black;
-    background: #ff0000;/*#ffffff;*/
+    background: #DCDCDC;/*#ffffff;*/
     display: flex;
     justify-content: center;
     align-items: center;
     height: 30px;
+    font-size: 25px;
     
 }
 /*
