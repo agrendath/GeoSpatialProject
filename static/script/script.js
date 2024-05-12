@@ -56,13 +56,42 @@ zones_names.forEach((zone)=>{
     zones.appendChild(div)
 })*/
 
-zone_markersJSON.forEach((element)=>{
+/*zone_markersJSON.forEach((element)=>{
     div = document.createElement("div")
     div.setAttribute('class', 'zone')
     div.textContent = element.ref
     zones.appendChild(div)
 })
+*/
 
+
+const groupedZones = {};
+zone_markersJSON.forEach(element => {
+    if (!groupedZones[element.ref]) {
+        groupedZones[element.ref] = [];
+    }
+    groupedZones[element.ref].push(element);
+});
+
+Object.keys(groupedZones).forEach(ref => {
+    const elements = groupedZones[ref];
+    let totalOccurences = elements.length;
+    const div = document.createElement("div");
+    div.setAttribute('class', 'zone');
+    div.textContent = ref;
+
+    if (totalOccurences > 1) {
+        div.style.flexGrow = totalOccurences;
+    }
+
+    zones.appendChild(div);
+});
+
+/*const extraDiv = document.createElement("div");
+extraDiv.style.backgroundColor = "#0065af";
+extraDiv.style.width = "10px";
+zones.appendChild(extraDiv);
+*/
 var locoLeft = false;
 var locoRight = false;
 carriages.forEach((carriage, index)=>{

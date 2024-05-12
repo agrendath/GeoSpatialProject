@@ -61,7 +61,11 @@ def getConnections(station_from, station_to):
     url = "http://api.irail.be/connections"
     params = {"from": station_from, "to": station_to, "format": "json"}
     response = requests.get(url, params=params)
-    response = response.json()
+    try:
+        response = response.json()
+    except requests.JSONDecodeError:
+        print("[ERROR] Something went wrong while getting the connections")
+        return None
     if response is None:
         print("[ERROR] Something went wrong while getting the connections")
         return None
