@@ -12,6 +12,13 @@ Passengers are often faced with uncertainty when waiting for their train on a pl
 - How to avoid certain parts of the train if the arrival platform is shorter than the length of the train.
 - All these uncertainties can lead to confusion and even delays in boarding, especially on crowded platforms.
 
+This solution will provide them with a web interface displaying :
+
+- The usual platform screen information (train destination, departure time, etc.).
+- Train composition information (number and type of wagons).
+- Information about the platform (size of platform, landmarks such as zones, accesses).
+- The direction of the train in relation to the platform.
+- 
 ## Installation
 
 1. Clone the repository :
