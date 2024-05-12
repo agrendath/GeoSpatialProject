@@ -10,9 +10,31 @@ import composition
 overpass_api = overpy.Overpass()
 
 def computeDistance(location1, location2):
+    """
+    Returns the distance in meters between two geographic locations.
+
+    Parameters:
+    - location1 (tuple): Latitude and longitude of the first location as (latitude, longitude).
+    - location2 (tuple): Latitude and longitude of the second location as (latitude, longitude).
+
+    Returns:
+    float: The distance between the two locations in meters.
+    """
+
     return distance.distance(location1, location2).m
 
 def getDirection(zone_markers, first_stop, departure):
+    """
+    Determines the direction of the train, by computing the distance between zone and first stop.
+
+    Parameters:
+    - zone_markers (list): List of zone markers.
+    - first_stop (dict or None): Information about the first stop.
+    - departure (dict): Information about the train departure.
+
+    Returns:
+    str: The direction of the train ('left' or 'right').
+    """
     if len(zone_markers) < 2:
         return "unknown"
     if first_stop is None:
@@ -21,7 +43,7 @@ def getDirection(zone_markers, first_stop, departure):
     else:
         print("[DEBUG] Intermediary stops found, taking first stop to calculate direction")
         nextLocation = (first_stop["stationinfo"]["locationY"], first_stop["stationinfo"]["locationX"])
-    
+
     firstZone = (zone_markers[0]["lat"], zone_markers[0]["lon"])
     lastZone = (zone_markers[-1]["lat"], zone_markers[-1]["lon"])
 
@@ -62,6 +84,16 @@ def formatConnections(connections, departure):
     return (final, first_stop)
 
 def getConnections(station_from, station_to):
+    """
+    Gets information about train connections between two stations.
+
+    Parameters:
+    - station_from (str): The departure station.
+    - station_to (str): The destination station.
+
+    Returns:
+    dict: Information about train connections.
+    """
     url = "http://api.irail.be/connections"
     params = {"from": station_from, "to": station_to, "format": "json"}
     response = requests.get(url, params=params)
@@ -83,6 +115,15 @@ def getConnections(station_from, station_to):
     return response
 
 def getLiveboard(station):
+    """
+    Gets the liveboard information for a given station.
+
+    Parameters:
+    - station (str): The name of the station.
+
+    Returns:
+    dict: The liveboard information.
+    """
     url = "http://api.irail.be/liveboard"
     params = {"station": station, "format": "json"}
     response = requests.get(url, params=params)
@@ -97,6 +138,16 @@ def getLiveboard(station):
 
 
 def getComposition(station, departure):
+    """
+    Gets information about the composition of a train.
+
+    Parameters:
+    - station (str): The departure station.
+    - departure (dict): Information about the train departure.
+
+    Returns:
+    dict: Information about the train composition.
+    """
     liveboard = getLiveboard(station)
     from_id = liveboard["stationinfo"]["id"].split(".")[-1]
     to_id = departure["stationinfo"]["id"].split(".")[-1]
@@ -130,6 +181,16 @@ Sample departure: {'id': '28', 'delay': '0', 'station': 'Kortrijk', 'stationinfo
 
 
 def getNextDeparture(station, platform):
+    """
+    Gets information about the next train departure from a given station and platform.
+
+    Parameters:
+    - station (str): The departure station.
+    - platform (int): The departure platform.
+
+    Returns:
+    dict or None: Information about the next train departure, or None if no departure is found.
+    """
     liveboard = getLiveboard(station)
     if liveboard is None:
         return None
@@ -152,6 +213,16 @@ Returns some standard information about the next train departing from the given 
 
 
 def getNextTrainInfo(station, platform):
+    """
+    Gets standard information about the next train departing from the given station and platform.
+
+    Parameters:
+    - station (str): The station where the train departs.
+    - platform (int): The platform where the train departs.
+
+    Returns:
+    list: A list with the destination, the vehicle name, and the departure time in a readable format.
+    """
     departure = getNextDeparture(station, platform)
     destination = departure["station"]
     vehicle_name = departure["vehicleinfo"]["shortname"]
@@ -162,6 +233,15 @@ def getNextTrainInfo(station, platform):
 
 
 def getStandstillPositions(overpass_station_name):
+    """
+    Gets standstill positions for a given overpass station name.
+
+    Parameters:
+    - overpass_station_name (str): The name of the station in the overpass database.
+
+    Returns:
+    list: A list of standstill positions.
+    """
     query = """
     [out:json][timeout:25];
     area(id:3600052411)->.searchArea;
@@ -188,6 +268,16 @@ def getStandstillPositions(overpass_station_name):
 
 
 def getNodesWithTrack(nodes, track):
+    """
+    Gets nodes with a specific track.
+
+    Parameters:
+    - nodes (list): List of nodes.
+    - track (str): Track reference.
+
+    Returns:
+    list: A list of nodes with the specified track.
+    """
     result = []
     for node in nodes:
         if node["track"] == str(track):
@@ -198,6 +288,16 @@ def getNodesWithTrack(nodes, track):
 
 
 def getNodeWithRef(nodes, ref):
+    """
+    Gets a node with a specific reference.
+
+    Parameters:
+    - nodes (list): List of nodes.
+    - ref (str): Reference of the node.
+
+    Returns:
+    dict or None: The node with the specified reference, or None if not found.
+    """
     for node in nodes:
         if node["ref"] == str(ref):
             return node
@@ -206,6 +306,15 @@ def getNodeWithRef(nodes, ref):
 
 
 def getZoneMarkers(overpass_station_name):
+    """
+    Gets zone markers for a given overpass station name.
+
+    Parameters:
+    - overpass_station_name (str): The name of the station in the overpass database.
+
+    Returns:
+    list: A list of zone markers.
+    """
     query = """
     [out:json][timeout:25];
     area(id:3600052411)->.searchArea;
@@ -234,6 +343,16 @@ def getZoneMarkers(overpass_station_name):
 
 
 def getNextNextDeparture(station, platform):
+    """
+    Gets information about the next next train departure from a given station and platform to display information at the bottom of the screen.
+
+    Parameters:
+    - station (str): The departure station.
+    - platform (int): The departure platform.
+
+    Returns:
+    dict or None: Information about the next next train departure, or None if no departure is found.
+    """
     liveboard = getLiveboard(station)
     if liveboard is None:
         return None
@@ -249,6 +368,17 @@ def getNextNextDeparture(station, platform):
 
 
 def getStandstillPosition(station, overpass_station_name, platform):
+    """
+    Gets information about the standstill position for a given station, overpass station name, and platform.
+
+    Parameters:
+    - station (str): The departure station.
+    - overpass_station_name (str): The name of the station in the overpass database.
+    - platform (int): The departure platform.
+
+    Returns:
+    dict or None: Information about the standstill position, or None if not found.
+    """
     departure = getNextDeparture(station, platform)
     if departure is None:
         return None  # No standstill position found
@@ -306,13 +436,14 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 1
+    platform = 2
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
-    # return(f"{standstill_position}")
-    # standstill_position = None   #test with no standstill_position if standstill_position
-    #standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989','departure_time': '19:10','composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 10, 'carriages': [ {'carriage_type': 'left-wagon', 'model': 'AM08P_c', 'classes': [1, 2],'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08P_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4},{'carriage_type': 'middle-wagon', 'model': 'AM08P_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}]},'standstill_position': None}  # test with standstill_position if no standstill_position
-
+    from decimal import Decimal
+    standstill_position = {'station': 'Dendermonde', 'destination': 'Dendermonde', 'vehicle_name': 'S3 2270', 'departure_time': '21:50', 'composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 3, 'carriages': [{'carriage_type': 'left-wagon', 'model': 'AM08M_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08M_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': 'middle-wagon', 'model': 'AM08M_c', 'classes': [1, 2], 'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}]}, 'next_destination': 'Aalst', 'next_vehicle_name': 'S10 2071', 'next_departure_time': '22:09', 'next_composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 3, 'carriages': [{'carriage_type': 'left-wagon', 'model': 'AM08M_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08M_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': 'middle-wagon', 'model': 'AM08M_c', 'classes': [1, 2], 'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}]}, 'standstill_position': {'track': '1', 'ref': '2', 'lat': Decimal('50.8607274'), 'lon': Decimal('4.3612826')}, 'zone_markers': [{'track': '1', 'ref': '1B', 'lat': Decimal('50.8595626'), 'lon': Decimal('4.3607387')}, {'track': '1', 'ref': '1B', 'lat': Decimal('50.8601953'), 'lon': Decimal('4.3610195')}, {'track': '1', 'ref': '1A', 'lat': Decimal('50.8609263'), 'lon': Decimal('4.3613439')}], 'departure': {'id': '4', 'station': 'Dendermonde', 'stationinfo': {'@id': 'http://irail.be/stations/NMBS/008893401', 'id': 'BE.NMBS.008893401', 'name': 'Dendermonde', 'locationX': '4.101427', 'locationY': '51.022781', 'standardname': 'Dendermonde'}, 'time': '1715370600', 'delay': '0', 'canceled': '0', 'left': '0', 'isExtra': '0', 'vehicle': 'BE.NMBS.S32270', 'vehicleinfo': {'name': 'BE.NMBS.S32270', 'shortname': 'S3 2270', 'number': '2270', 'type': 'S3', 'locationX': '0', 'locationY': '0', '@id': 'http://irail.be/vehicle/S32270'}, 'platform': '1', 'platforminfo': {'name': '1', 'normal': '1'}, 'occupancy': {'@id': 'http://api.irail.be/terms/low', 'name': 'low'}, 'departureConnection': 'http://irail.be/connections/8812005/20240510/S32270'}}
+    
+    print(standstill_position)
+    
     if standstill_position is None:
         return render_template('index.html', platform=f"{platform}",
                                error=f"No standstill position found for {station}.")
@@ -331,7 +462,7 @@ def index():
 
     connections = getConnections(station, destination)
     (stops, first_stop) = formatConnections(connections, standstill_position["departure"])
-    
+
     direction = getDirection(standstill_position["zone_markers"], first_stop, standstill_position["departure"])
     if first_stop is not None:
         print("[DEBUG] First stop: " + str(first_stop["station"]))
@@ -339,7 +470,6 @@ def index():
     print("[DEBUG] Determined direction: " + direction)
 
     carriages_info = []
-    i = 0
     for carriage in composition_data["carriages"]:
         carriage_type = carriage["carriage_type"]
         carriage_classes = carriage["classes"]
@@ -351,8 +481,10 @@ def index():
             carriage_info += " (Bike)"
         if "accessible_toilet" in facilities:
             carriage_info += " (Accessible toilet)"
-        elif "toilet" in facilities:
+        if "toilet" in facilities:
             carriage_info += " (Toilet)"
+        if "luggage_lockers" in facilities:
+            carriage_info += " (Luggage lockers)"
 
         carriage_info += f" - {carriage_classes}"
         carriages_info.append(carriage_info)
@@ -372,9 +504,9 @@ def index():
         zone_markers = "None"
 
     return render_template('index.html', error="No", platform=f"{platform}", destination=f"{destination}",
-                           vehicle_name=f"{vehicle_name}", departure_time=f"{departure_time}",
-                           facilities=f"{facilities}", composition_occupancy=f"{composition_data['occupancy']}",
-                           composition_carriages=f"{composition_data['carriages_count']}", carriages=f"{carriages}",
-                           position_info=f"{position_info}", zone_markers=f"{zone_markers}",
-                           next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}",
-                           bikes=bikes)
+                           departure_time=f"{departure_time}",
+                           facilities=facilities, composition_occupancy=f"{composition_data['occupancy']}",
+                           carriages=carriages,
+                           position_info=f"{position_info}", zone_markers=zone_markers,
+                           next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}", 
+                           stops=stops, direction=f"{direction}")

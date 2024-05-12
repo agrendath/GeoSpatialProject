@@ -8,45 +8,108 @@ zones.setAttribute('id', 'zones');
 container.appendChild(zones)
 container.appendChild(train)
 
-//affichage des zones
-zones_names = "A,B,C,D,E"
-zones_names = zones_names.split(",")
+//var variablesElement = document.getElementById('variables');
 
-zones_names.forEach((zone)=>{
-    div = document.createElement("div")
-    div.setAttribute('class', 'zone')
-    div.textContent = zone
-    zones.appendChild(div)
-})
+var carriagesElement = document.getElementById('carriages');
+var zone_markersElement = document.getElementById('zone_markers');
+var directionElement = document.getElementById('direction');
 
-var variablesElement = document.getElementById('variables');
+var carriagesText = carriagesElement.dataset.flaskVariable;
+var zone_markersText = zone_markersElement.dataset.flaskVariable;
+var directionText = directionElement.dataset.flaskVariable;
 
-//var carriages = variablesElement.dataset.flaskVariable;//.split(",");
 
-var carriages2 = variablesElement.dataset.flaskVariable;
+var carriages = carriagesText.split(/,(?![^\[\]]*])/);
 
-var expression = /,(?![^\[\]]*])/;
+zone_markersText =  zone_markersText.split("Decimal('")
+zone_markersText =  zone_markersText.join("")
+zone_markersText =  zone_markersText.split("')")
+zone_markersText =  zone_markersText.join("")
+zone_markersText =  zone_markersText.split("'")
+zone_markersText =  zone_markersText.join('"')
 
-var carriages = carriages2.split(expression);
-
-console.log(carriages)
+var zone_markersJSON = JSON.parse(zone_markersText);
 
 nb_carriages = carriages.length
-//var nb_carriages = composition_carriages
-console.log(nb_carriages)
 
-/*displayImages(div,carriage){
-    if (condition) {
-
+/*const groupedZones = {};
+zone_markersJSON.forEach(element => {
+    if (!groupedZones[element.ref]) {
+        groupedZones[element.ref] = [];
     }
-}*/
+    groupedZones[element.ref].push(element);
+});
 
-carriages.forEach((carriage)=>{
+Object.keys(groupedZones).forEach(ref => {
+    const elements = groupedZones[ref];
+    let totalOccurences = elements.length;
+    const div = document.createElement("div");
+    div.setAttribute('class', 'zone');
+    div.textContent = ref;
+
+    if (totalOccurences > 1) {
+        div.style.flexGrow = totalOccurences;
+    }
+
+    zones.appendChild(div);
+});*/
+
+
+//interverti
+function isAntiAlphabetical(keys) {
+    for (let i = 1; i < keys.length; i++) {
+        if (keys[i] > keys[i - 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+var invert = false;
+
+const groupedZones = {};
+zone_markersJSON.forEach(element => {
+    if (!groupedZones[element.ref]) {
+        groupedZones[element.ref] = [];
+    }
+    groupedZones[element.ref].push(element);
+});
+
+const keys = Object.keys(groupedZones);
+
+if (isAntiAlphabetical(keys)) {
+    invert = true;
+}
+
+if (invert) {
+    keys.reverse();
+}
+
+keys.forEach(ref => {
+    const elements = groupedZones[ref];
+    let totalOccurences = elements.length;
+    const div = document.createElement("div");
+    div.setAttribute('class', 'zone');
+    div.textContent = ref;
+
+    if (totalOccurences > 1) {
+        div.style.flexGrow = totalOccurences;
+    }
+
+    zones.appendChild(div);
+});
+//fin interverti
+
+//interverti
+if (invert) {
+    carriages.reverse();
+}
+//fin interverti
+
+carriages.forEach((carriage, index)=>{
     div = document.createElement("div")
     div.setAttribute('class', 'cb')
     div.setAttribute('style', 'width='+100/nb_carriages+"%")
-
-    console.log(carriage)
 
     //Icons
     if (carriage.includes("(Accessible toilet)")) {
@@ -61,30 +124,54 @@ carriages.forEach((carriage)=>{
         div.innerHTML += "<div class='right-top'><i class='fa fa-bicycle'></i></div>";
     }
 
+    if (carriage.includes("(Luggage lockers)")) {
+        div.innerHTML += "<div class='right-bottom'><i class='fa fa-lock'></i></div>";
+    }
+
    //Classes
    if (carriage.includes("[1]")) {
-        div.innerHTML += "<div class='yellow'>1</div>";
+        div.innerHTML += "<div class='middle'><span class='yellow'>1</span></div>";
     }else if (carriage.includes("[2]")) {
-        div.innerHTML += "<div>2</div>";
+        div.innerHTML += "<div class='middle'>2</div>";
     }else if (carriage.includes("[1, 2]")) {
-        div.innerHTML += "<div><span class='yellow'>1</span>2</div>";
+        div.innerHTML += "<div class='middle'><span class='yellow'>1</span>, 2</div>";
+    }else  {
+        if (index === 0) {
+            div.classList.add('locoL');
+        } else {
+            div.classList.add('locoR');
+        }
     }
 
     train.appendChild(div)
 })
 
 
+var arr = document.createElement('div');
+arr.setAttribute('class', 'arrow');
+
+//interverti
+if (invert) { //interverti
+    if (directionText === "left") {
+        directionText = "right"
+    } else if (directionText === "right") {
+        directionText = "left"
+    }
+}
+
+//fin interverti
+
+if (directionText === "left") {
+    arr.innerHTML = "<i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i>";
+} else if (directionText === "right") {
+    arr.innerHTML = "<i class='fa fa-arrow-right'></i><i class='fa fa-arrow-right'></i><i class='fa fa-arrow-right'></i>";
+}
+
+container.appendChild(arr)
+
 tchou = document.getElementById('tchoutchou');
 tchou.appendChild(container)
 
-/*
-            <i class="fa fa-bicycle"></i><br>
-            <i class="fa fa-wheelchair"></i><br>
-            <i class="fa fa-arrow-right"></i>
-            <i class="fa fa-arrow-left"></i><br>
-            <i class="fa fa-arrow-circle-right"></i>
-            <i class="fa fa-arrow-circle-left"></i><br>
-            <i class="fa fa-volume-xmark"></i><br>
-            <i class="fa fa-stairs"></i><br>
-            <i class="fa fa-restroom"></i>
-*/
+setInterval(function(){
+    window.location.reload();
+}, 5000); // Rafraîchit la page toutes les 5 secondes (5000 millisecondes)
