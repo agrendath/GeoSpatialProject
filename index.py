@@ -3,11 +3,84 @@ import requests
 from datetime import datetime
 import overpy
 from flask import render_template, request, redirect, url_for
+from geopy import distance
 
 import composition
 
 overpass_api = overpy.Overpass()
 
+def computeDistance(location1, location2):
+    return distance.distance(location1, location2).m
+
+def getDirection(zone_markers, first_stop, departure):
+    if len(zone_markers) < 2:
+        return "unknown"
+    if first_stop is None:
+        print("[DEBUG] No intermediary stops found, taking terminal stop to calculate direction")
+        nextLocation = (departure["stationinfo"]["locationY"], departure["stationinfo"]["locationX"])
+    else:
+        print("[DEBUG] Intermediary stops found, taking first stop to calculate direction")
+        nextLocation = (first_stop["stationinfo"]["locationY"], first_stop["stationinfo"]["locationX"])
+    
+    firstZone = (zone_markers[0]["lat"], zone_markers[0]["lon"])
+    lastZone = (zone_markers[-1]["lat"], zone_markers[-1]["lon"])
+
+    dist1 = computeDistance(nextLocation, firstZone)
+    dist2 = computeDistance(nextLocation, lastZone)
+
+    print("[DEBUG] Distance to first zone marker: " + str(dist1))
+    print("[DEBUG] Distance to last zone marker: " + str(dist2))
+
+    if dist1 < dist2:
+        return "left"
+    else:
+        return "right"
+
+def formatConnections(connections, departure):
+    id = departure["departureConnection"]
+    stops = None
+    #print(str(connections))
+    for connection in connections["connection"]:
+        #print("---------------------------------- Dep: " + str(connection))
+        if connection["departure"] is None or connection["departure"]["departureConnection"] is None:
+            continue
+        if connection["departure"]["departureConnection"] == id:
+            stops = connection["departure"]["stops"]
+
+    if stops is None:
+        return ([], None)
+
+    final = []
+    for stop in stops["stop"]:
+        final.append(stop["station"])
+
+    print("[DEBUG] Stops of the train: " + str(final))
+    if final == []:
+        first_stop = None
+    else:
+        first_stop = stops["stop"][0]
+    return (final, first_stop)
+
+def getConnections(station_from, station_to):
+    url = "http://api.irail.be/connections"
+    params = {"from": station_from, "to": station_to, "format": "json"}
+    response = requests.get(url, params=params)
+    try:
+        response = response.json()
+    except requests.JSONDecodeError:
+        print("[ERROR] Something went wrong while getting the connections")
+        return None
+    if response is None:
+        print("[ERROR] Something went wrong while getting the connections")
+        return None
+    if "error" in response:
+        print("[ERROR] Something went wrong while getting the connections:", response["message"])
+        return None
+    #print("[DEBUG] Connections:", response)
+    #for temp in response["connection"]:
+        #print(" --- " + str(temp))
+        #print(" ---------------------------------------------------------------------------")
+    return response
 
 def getLiveboard(station):
     url = "http://api.irail.be/liveboard"
@@ -63,6 +136,7 @@ def getNextDeparture(station, platform):
     departures = liveboard["departures"]["departure"]
     for departure in departures:
         if departure["platform"] != "?" and int(departure["platform"]) == platform:
+            print("[DEBUG] Departure: " + str(departure))
             return departure
     print("[ERROR] NO DEPARTURE FOUND")
     return None  # No departure found
@@ -221,7 +295,8 @@ def getStandstillPosition(station, overpass_station_name, platform):
         "next_departure_time": datetime.fromtimestamp(int(next_departure["time"])).strftime("%H:%M"),
         "next_composition": next_composition_data,
         "standstill_position": standstill_position,
-        "zone_markers": track_zone_markers
+        "zone_markers": track_zone_markers,
+        "departure": departure
     }
 
     return output
@@ -253,6 +328,15 @@ def index():
     except KeyError:
         next_destination = "None"
         next_departure_time = "None"
+
+    connections = getConnections(station, destination)
+    (stops, first_stop) = formatConnections(connections, standstill_position["departure"])
+    
+    direction = getDirection(standstill_position["zone_markers"], first_stop, standstill_position["departure"])
+    if first_stop is not None:
+        print("[DEBUG] First stop: " + str(first_stop["station"]))
+    print("[DEBUG] Zone markers: " + str(standstill_position["zone_markers"]))
+    print("[DEBUG] Determined direction: " + direction)
 
     carriages_info = []
     i = 0
@@ -292,4 +376,5 @@ def index():
                            facilities=f"{facilities}", composition_occupancy=f"{composition_data['occupancy']}",
                            composition_carriages=f"{composition_data['carriages_count']}", carriages=f"{carriages}",
                            position_info=f"{position_info}", zone_markers=f"{zone_markers}",
-                           next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}")
+                           next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}",
+                           bikes=bikes)
