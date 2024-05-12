@@ -18,7 +18,6 @@ This solution will provide them with a web interface displaying :
 - Train composition information (number and type of wagons).
 - Information about the platform (size of platform, landmarks such as zones, accesses).
 - The direction of the train in relation to the platform.
-- 
 ## Installation
 
 1. Clone the repository :
@@ -44,7 +43,7 @@ This solution will provide them with a web interface displaying :
 To start the project you can run `python app.py`.
 And then go to the url indicated: http://127.0.0.1:5000/
 
-By default, the information displayed is that for the departures of voice 2 in Brussels North.
+By default, the information displayed is that for the departures of platform 2 in Brussels North.
 You can change this by modifying this part of the code in the index.py file
 and the function of the same name.
 
