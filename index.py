@@ -7,15 +7,21 @@ from geopy import distance
 
 import composition
 
+overpass_api = overpy.Overpass()
+
 def computeDistance(location1, location2):
     return distance.distance(location1, location2).m
 
-def getDirection(zone_markers, first_stop):
+def getDirection(zone_markers, first_stop, departure):
     if len(zone_markers) < 2:
         return "unknown"
     if first_stop is None:
-        return "unknown"
-    nextLocation = (first_stop["stationinfo"]["locationY"], first_stop["stationinfo"]["locationX"])
+        print("[DEBUG] No intermediary stops found, taking terminal stop to calculate direction")
+        nextLocation = (departure["stationinfo"]["locationY"], departure["stationinfo"]["locationX"])
+    else:
+        print("[DEBUG] Intermediary stops found, taking first stop to calculate direction")
+        nextLocation = (first_stop["stationinfo"]["locationY"], first_stop["stationinfo"]["locationX"])
+
     firstZone = (zone_markers[0]["lat"], zone_markers[0]["lon"])
     lastZone = (zone_markers[-1]["lat"], zone_markers[-1]["lon"])
 
@@ -29,8 +35,6 @@ def getDirection(zone_markers, first_stop):
         return "left"
     else:
         return "right"
-
-overpass_api = overpy.Overpass()
 
 def formatConnections(connections, departure):
     id = departure["departureConnection"]
@@ -302,12 +306,17 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 6
+    platform = 2
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     # return(f"{standstill_position}")
     # standstill_position = None   #test with no standstill_position if standstill_position
-    #standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989','departure_time': '19:10','composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 10, 'carriages': [ {'carriage_type': 'left-wagon', 'model': 'AM08P_c', 'classes': [1, 2],'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08P_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4},{'carriage_type': 'middle-wagon', 'model': 'AM08P_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}]},'standstill_position': None}  # test with standstill_position if no standstill_position
+    #standstill_position = {'station': 'Nivelles', 'destination': 'Nivelles', 'vehicle_name': 'S1 1989','departure_time': '19:10','composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 10, 'carriages': [ {'carriage_type': 'left-wagon', 'model': 'AM08P_c', 'classes': [1, 2],'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08P_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4},{'carriage_type': 'middle-wagon', 'model': 'AM08P_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}]},'standstill_position': None}  
+    #standstill_position =  {'station': 'Dendermonde', 'destination': 'Dendermonde', 'vehicle_name': 'S3 2270', 'departure_time': '21:50', 'composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 3, 'carriages': [{'carriage_type': 'left-wagon', 'model': 'AM08M_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08M_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': 'middle-wagon', 'model': 'AM08M_c', 'classes': [1, 2], 'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}]}, 'next_destination': 'Aalst', 'next_vehicle_name': 'S10 2071', 'next_departure_time': '22:09', 'next_composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 3, 'carriages': [{'carriage_type': 'left-wagon', 'model': 'AM08M_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08M_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': 'middle-wagon', 'model': 'AM08M_c', 'classes': [1, 2], 'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}]}, 'standstill_position': {'track': '1', 'ref': '2', 'lat': "Decimal('50.8607274')", 'lon': "Decimal('4.3612826')"}, 'zone_markers': [{'track': '1', 'ref': '1B', 'lat': "Decimal('50.8595626')", 'lon': "Decimal('4.3607387')"}, {'track': '1', 'ref': '1B', 'lat': "Decimal('50.8601953')", 'lon': "Decimal('4.3610195')"}, {'track': '1', 'ref': '1A', 'lat': "Decimal('50.8609263')", 'lon': "Decimal('4.3613439')"}], 'departure': {'id': '4', 'station': 'Dendermonde', 'stationinfo': {'@id': 'http://irail.be/stations/NMBS/008893401', 'id': 'BE.NMBS.008893401', 'name': 'Dendermonde', 'locationX': '4.101427', 'locationY': '51.022781', 'standardname': 'Dendermonde'}, 'time': '1715370600', 'delay': '0', 'canceled': '0', 'left': '0', 'isExtra': '0', 'vehicle': 'BE.NMBS.S32270', 'vehicleinfo': {'name': 'BE.NMBS.S32270', 'shortname': 'S3 2270', 'number': '2270', 'type': 'S3', 'locationX': '0', 'locationY': '0', '@id': 'http://irail.be/vehicle/S32270'}, 'platform': '1', 'platforminfo': {'name': '1', 'normal': '1'}, 'occupancy': {'@id': 'http://api.irail.be/terms/low', 'name': 'low'}, 'departureConnection': 'http://irail.be/connections/8812005/20240510/S32270'}}
+    
+    from decimal import Decimal
+    standstill_position =  {'station': 'Dendermonde', 'destination': 'Dendermonde', 'vehicle_name': 'S3 2270', 'departure_time': '21:50', 'composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 3, 'carriages': [{'carriage_type': 'left-wagon', 'model': 'AM08M_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08M_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': 'middle-wagon', 'model': 'AM08M_c', 'classes': [1, 2], 'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}]}, 'next_destination': 'Aalst', 'next_vehicle_name': 'S10 2071', 'next_departure_time': '22:09', 'next_composition': {'facilities': ['airconditioning', 'heating'], 'occupancy': 'low', 'carriages_count': 3, 'carriages': [{'carriage_type': 'left-wagon', 'model': 'AM08M_a', 'classes': [1, 2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': '', 'model': 'AM08M_b', 'classes': [2], 'facilities': [], 'carriage_size': 18.4}, {'carriage_type': 'middle-wagon', 'model': 'AM08M_c', 'classes': [1, 2], 'facilities': ['accessible_toilet', 'toilet', 'bike'], 'carriage_size': 18.4}]}, 'standstill_position': {'track': '1', 'ref': '2', 'lat': Decimal('50.8607274'), 'lon': Decimal('4.3612826')}, 'zone_markers': [{'track': '1', 'ref': '1B', 'lat': Decimal('50.8595626'), 'lon': Decimal('4.3607387')}, {'track': '1', 'ref': '1B', 'lat': Decimal('50.8601953'), 'lon': Decimal('4.3610195')}, {'track': '1', 'ref': '1A', 'lat': Decimal('50.8609263'), 'lon': Decimal('4.3613439')}], 'departure': {'id': '4', 'station': 'Dendermonde', 'stationinfo': {'@id': 'http://irail.be/stations/NMBS/008893401', 'id': 'BE.NMBS.008893401', 'name': 'Dendermonde', 'locationX': '4.101427', 'locationY': '51.022781', 'standardname': 'Dendermonde'}, 'time': '1715370600', 'delay': '0', 'canceled': '0', 'left': '0', 'isExtra': '0', 'vehicle': 'BE.NMBS.S32270', 'vehicleinfo': {'name': 'BE.NMBS.S32270', 'shortname': 'S3 2270', 'number': '2270', 'type': 'S3', 'locationX': '0', 'locationY': '0', '@id': 'http://irail.be/vehicle/S32270'}, 'platform': '1', 'platforminfo': {'name': '1', 'normal': '1'}, 'occupancy': {'@id': 'http://api.irail.be/terms/low', 'name': 'low'}, 'departureConnection': 'http://irail.be/connections/8812005/20240510/S32270'}}
+    
     print(standstill_position)
     
     if standstill_position is None:
@@ -329,7 +338,7 @@ def index():
     connections = getConnections(station, destination)
     (stops, first_stop) = formatConnections(connections, standstill_position["departure"])
 
-    direction = getDirection(standstill_position["zone_markers"], first_stop)
+    direction = getDirection(standstill_position["zone_markers"], first_stop, standstill_position["departure"])
     if first_stop is not None:
         print("[DEBUG] First stop: " + str(first_stop["station"]))
     print("[DEBUG] Zone markers: " + str(standstill_position["zone_markers"]))
