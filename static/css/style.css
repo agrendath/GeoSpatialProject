@@ -1,28 +1,24 @@
-@import url('https://fonts.cdnfonts.com/css/clarendon');
-
 /*Page */
 body {
     background-color: #0065af;
     color: white;
-    /*font-family: 'Clarendon', sans-serif;*/
     overflow: hidden;
-    padding-left: 1%;
-    padding-right: 1%;
-    padding-top: 1%;
+    margin-right: 2.5%; /*m*/
+    margin-left: 2.5%; /*8*/
  }
 
-/*header {
+header {
     display: flex;
     justify-content: space-between;
-}*/
+}
 
 
-header {
+/*header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-}
+}*/
 
 footer {
     position: fixed;
@@ -37,7 +33,7 @@ footer {
 
 footer p {
     margin: 0;
-    padding-left: 1%;
+    padding-left: 2.5%;
 }
 
 
@@ -89,10 +85,12 @@ h1 {
 }
 
 #container{
-    min-height: 100px;
+    position: fixed;
+    bottom: 10%; 
     background-color: aliceblue;
-    margin-left: auto;
-    margin-right: auto;
+    left: 50%; /* Déplace le conteneur à 50% de la largeur de la fenêtre */
+    transform: translateX(-50%); /* Translate le conteneur de moitié de sa propre largeur vers la gauche */
+    /*min-height: 100px;*/
     width: 95%;
 }
 
@@ -176,50 +174,50 @@ h1 {
 
 @media only screen and (max-width: 1920px) {
     body {
-        font-size: 20px;
-        background: purple;
+        font-size: 16px;
+        /*background: purple;*/
     }
 }
 
-
 @media only screen and (max-width: 1600px) {
     body {
-        font-size: 18px;
-        background: blue;
+        font-size: 15px;
+        /*background: blue;*/
     }
 }
 
 @media only screen and (max-width: 1200px) {
     body {
-        font-size: 16px;
-        background:white;
+        font-size: 14px;
+        /*background:orange;*/
     }
 }
 
 @media only screen and (max-width: 992px) {
     body {
-        font-size: 14px;
-        background:black;
+        font-size: 13px;
+        /*background:cyan;*/
     }
 }
 
 @media only screen and (max-width: 768px) {
     body {
         font-size: 12px;
-        background:red;
+        /*background:red;*/
     }
 }
 
 @media only screen and (max-width: 480px) {
     body {
-        font-size: 10px;
-        background:white;
+        font-size: 11px;
+        /*background:aliceblue;*/
     }
 }
 
+/*Pas ici*/
 @media only screen and (max-width: 320px) {
     body {
-        font-size: 8px;
-        background:black;
+        font-size: 10px;
+        /*background:black;*/
     }
 }
