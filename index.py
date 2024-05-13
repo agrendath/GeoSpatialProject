@@ -157,6 +157,9 @@ def getComposition(station, departure):
         "[DEBUG] Getting composition with " + from_id + " -> " + to_id + "; vehicle:" + vehicle + "; time:" + str(time))
     comp = composition.get_train_composition(from_id, to_id, vehicle, time)
     print(comp)
+    if comp is None:
+        print("[DEBUG] Error getting the train composition, API returned None.")
+        return None
     composition_data = {
         "facilities": comp.facilities,
         "occupancy": comp.occupancy,
