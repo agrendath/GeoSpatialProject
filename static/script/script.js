@@ -130,20 +130,9 @@ carriages.forEach((carriage, index)=>{
         var e = 100 - decalWidth ;
         div.style.left = e - (carrWidth*(nb_carriages+1)) + '%';
         console.log(carrWidth);
-        /*div.style.left = decalWidth + '%';
-        
-        /*0.3	
-        100% -0.3% - taille train*/
-        
-        
-        /*div.style.left = decalWidth + '%';*/
     }
-    /*console.log(100/ totalDistance);              
-    console.log(stop_distanceText);        
-    console.log(totalDistance);*/
     
-    
-
+   
     //Icons
     if (carriage.includes("(Accessible toilet)")) {
         div.innerHTML = "<div class='left-bottom'><i class='fa fa-wheelchair'></i></div>";
@@ -170,7 +159,11 @@ carriages.forEach((carriage, index)=>{
         div.innerHTML += "<div class='middle'><span class='yellow'>1</span>, 2</div>";
     }else  {
         if (index === 0) {
-            div.classList.add('locoL');
+            if  (directionText === "right" && nb_carriages == 1) {
+                div.classList.add('locoR');
+            } else {
+                div.classList.add('locoL');
+            }
         } else {
             div.classList.add('locoR');
         }

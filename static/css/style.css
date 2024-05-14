@@ -3,8 +3,8 @@ body {
     background-color: #0065af;
     color: white;
     overflow: hidden;
-    margin-right: 2.5%; /*m*/
-    margin-left: 2.5%; /*8*/
+    margin-right: 2.5%; 
+    margin-left: 2.5%; 
  }
 
 header {
@@ -12,13 +12,6 @@ header {
     justify-content: space-between;
 }
 
-
-/*header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-}*/
 
 footer {
     position: fixed;
@@ -71,7 +64,7 @@ h1 {
 /*Train drawing*/
 .arrow{
     color:black;
-    background: #DCDCDC;/*#ffffff;*/
+    background: #DCDCDC;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -90,8 +83,8 @@ h1 {
     background-color: aliceblue;
     left: 50%; /* Déplace le conteneur à 50% de la largeur de la fenêtre */
     transform: translateX(-50%); /* Translate le conteneur de moitié de sa propre largeur vers la gauche */
-    /*min-height: 100px;*/
     width: 95%;
+    margin-bottom : 10%;
 }
 
 #zones{
@@ -99,7 +92,6 @@ h1 {
 }
 .zone{
     background-color: #0065af;
-    /*flex: 1; /* Chaque élément aura la même largeur */
     margin: 5px; 
     text-align: center;
     margin-top: 0;
@@ -118,14 +110,11 @@ h1 {
 /*Form carriage*/
 .cb{
     font-weight: bold;
-    /*height: 30px;*/
     height: 50px;
     margin-right: 4.8px;
     background:#003058;
-    /*flex: 1; /* Chaque élément aura la même largeur */
     margin: 5px; 
     position: relative;
-    /*left : 15%;*/
 }
 
 
@@ -174,46 +163,47 @@ h1 {
     transform: translate(-50%, -50%);
 }
 
+.left-bottom i,
+.left-top i,
+.right-top i,
+.right-bottom i {
+    font-size: 15px; /* Taille des icônes */
+}
 
-@media only screen and (max-width: 1920px) {
+
+@media only screen and (max-width: 1920px) {/*full*/
     body {
-        font-size: 16px;
-        /*background: purple;*/
+        font-size: 20px;
     }
 }
 
 @media only screen and (max-width: 1600px) {
     body {
-        font-size: 15px;
-        /*background: blue;*/
+        font-size: 16px;
     }
 }
 
 @media only screen and (max-width: 1200px) {
     body {
-        font-size: 14px;
-        /*background:orange;*/
+        font-size: 15px;
     }
 }
 
-@media only screen and (max-width: 992px) {
+@media only screen and (max-width: 992px) { /*demi*/
     body {
-        font-size: 13px;
-        /*background:cyan;*/
+        font-size: 15px;
     }
 }
 
 @media only screen and (max-width: 768px) {
     body {
         font-size: 12px;
-        /*background:red;*/
     }
 }
 
 @media only screen and (max-width: 480px) {
     body {
         font-size: 11px;
-        /*background:aliceblue;*/
     }
 }
 
@@ -221,6 +211,5 @@ h1 {
 @media only screen and (max-width: 320px) {
     body {
         font-size: 10px;
-        /*background:black;*/
     }
 }
