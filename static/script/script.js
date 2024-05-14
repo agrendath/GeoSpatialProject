@@ -8,18 +8,18 @@ zones.setAttribute('id', 'zones');
 container.appendChild(zones)
 container.appendChild(train)
 
-//var variablesElement = document.getElementById('variables');
-
 var carriagesElement = document.getElementById('carriages');
 var zone_markersElement = document.getElementById('zone_markers');
 var directionElement = document.getElementById('direction');
 var zone_distancesElement = document.getElementById('zone_distances');
+var stop_distanceElement = document.getElementById('stop_distance');
 
 
 var carriagesText = carriagesElement.dataset.flaskVariable;
 var zone_markersText = zone_markersElement.dataset.flaskVariable;
 var directionText = directionElement.dataset.flaskVariable;
 var zone_distancesText = zone_distancesElement.dataset.flaskVariable;
+var stop_distanceText = stop_distanceElement.dataset.flaskVariable;
 
 var carriages = carriagesText.split(/,(?![^\[\]]*])/);
 
@@ -34,30 +34,6 @@ var zone_markersJSON = JSON.parse(zone_markersText);
 
 nb_carriages = carriages.length
 
-/*const groupedZones = {};
-zone_markersJSON.forEach(element => {
-    if (!groupedZones[element.ref]) {
-        groupedZones[element.ref] = [];
-    }
-    groupedZones[element.ref].push(element);
-});
-
-Object.keys(groupedZones).forEach(ref => {
-    const elements = groupedZones[ref];
-    let totalOccurences = elements.length;
-    const div = document.createElement("div");
-    div.setAttribute('class', 'zone');
-    div.textContent = ref;
-
-    if (totalOccurences > 1) {
-        div.style.flexGrow = totalOccurences;
-    }
-
-    zones.appendChild(div);
-});*/
-
-
-//interverti
 function isAntiAlphabetical(keys) {
     for (let i = 1; i < keys.length; i++) {
         if (keys[i] > keys[i - 1]) {
@@ -68,8 +44,6 @@ function isAntiAlphabetical(keys) {
 }
 
 var invert = false;
-
-
 
 
 var zone_distances = JSON.parse(zone_distancesText);
@@ -90,13 +64,27 @@ zone_markersJSON.forEach(element => {
 
 const keys = Object.keys(groupedZones);
 
+//interverti
 if (isAntiAlphabetical(keys)) {
     invert = true;
 }
 
 if (invert) {
+    if (directionText === "left") {
+        directionText = "right"
+    } else if (directionText === "right") {
+        directionText = "left"
+    }
+}
+
+if (invert) {
     keys.reverse();
 }
+
+if (invert) {
+    carriages.reverse();
+}
+//fin interverti
 
 
 keys.forEach((ref, index) => {
@@ -124,18 +112,23 @@ keys.forEach((ref, index) => {
 
     zones.appendChild(div);
 });
-//fin interverti
-
-//interverti
-if (invert) {
-    carriages.reverse();
-}
-//fin interverti
 
 carriages.forEach((carriage, index)=>{
     div = document.createElement("div")
     div.setAttribute('class', 'cb')
-    div.setAttribute('style', 'width='+100/nb_carriages+"%")
+    
+    const carrWidth = (100/ totalDistance) * 18.4;
+    div.style.width = carrWidth + '%';
+    
+    if (directionText === "left") {
+        const decalWidth = (100/ totalDistance) * stop_distanceText;
+        div.style.left = decalWidth + '%';
+    } else if (directionText === "right") {
+        const decalWidth = (100/ totalDistance) * stop_distanceText;
+        div.style.left = decalWidth + '%';
+    }
+    
+    
 
     //Icons
     if (carriage.includes("(Accessible toilet)")) {
@@ -176,17 +169,6 @@ carriages.forEach((carriage, index)=>{
 var arr = document.createElement('div');
 arr.setAttribute('class', 'arrow');
 
-//interverti
-if (invert) {
-    if (directionText === "left") {
-        directionText = "right"
-    } else if (directionText === "right") {
-        directionText = "left"
-    }
-}
-
-//fin interverti
-
 if (directionText === "left") {
     arr.innerHTML = "<i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i><i class='fa fa-arrow-left'></i>";
 } else if (directionText === "right") {
@@ -200,4 +182,4 @@ tchou.appendChild(container)
 
 setInterval(function(){
     window.location.reload();
-}, 30000); // Rafraîchit la page toutes les 5 secondes (5000 millisecondes)
+}, 60000); // Rafraîchit la page toutes les 5 secondes (5000 millisecondes)

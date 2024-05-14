@@ -122,10 +122,13 @@ h1 {
     height: 50px;
     margin-right: 4.8px;
     background:#003058;
-    flex: 1; /* Chaque élément aura la même largeur */
+    /*flex: 1; /* Chaque élément aura la même largeur */
     margin: 5px; 
     position: relative;
+    /*left : 15%;*/
 }
+
+
 
 .locoR{
     -webkit-border-radius: 0px 800px 70px 0px;
