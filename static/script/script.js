@@ -127,8 +127,20 @@ carriages.forEach((carriage, index)=>{
         div.style.left = decalWidth + '%';
     } else if (directionText === "right") {
         const decalWidth = (100/ totalDistance) * stop_distanceText;
-        div.style.left = decalWidth + '%';
+        var e = 100 - decalWidth ;
+        div.style.left = e - (carrWidth*(nb_carriages+1)) + '%';
+        console.log(carrWidth);
+        /*div.style.left = decalWidth + '%';
+        
+        /*0.3	
+        100% -0.3% - taille train*/
+        
+        
+        /*div.style.left = decalWidth + '%';*/
     }
+    /*console.log(100/ totalDistance);              
+    console.log(stop_distanceText);        
+    console.log(totalDistance);*/
     
     
 

@@ -459,7 +459,7 @@ def getStandstillPosition(station, overpass_station_name, platform):
 def index():
     station = "Brussels North"
     station_overpass_name = "Bruxelles-Nord - Brussel-Noord"
-    platform = 1
+    platform = 9
     standstill_position = getStandstillPosition(station, station_overpass_name, platform)
 
     #from decimal import Decimal
@@ -523,15 +523,12 @@ def index():
 
     if standstill_position_data:
         position_info = f"Position: Ref - {standstill_position_data['ref']}, Lat - {standstill_position_data['lat']}, Lon - {standstill_position_data['lon']}"
-
         stop_coordinates = (float(standstill_position_data["lat"]), float(standstill_position_data["lon"]))
-        print(stop_coordinates)
         last_zone_coordinates = (float(zone_markers[-1]["lat"]), float(zone_markers[-1]["lon"]))
-        print(last_zone_coordinates)
         stop_distance = computeDistance(stop_coordinates, last_zone_coordinates)
-        print(stop_distance)
     else:
         position_info = "No standstill position data found."
+        stop_distance = 0
 
     try:
         zone_markers = standstill_position["zone_markers"]
