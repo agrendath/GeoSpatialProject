@@ -13,11 +13,13 @@ container.appendChild(train)
 var carriagesElement = document.getElementById('carriages');
 var zone_markersElement = document.getElementById('zone_markers');
 var directionElement = document.getElementById('direction');
+var zone_distancesElement = document.getElementById('zone_distances');
+
 
 var carriagesText = carriagesElement.dataset.flaskVariable;
 var zone_markersText = zone_markersElement.dataset.flaskVariable;
 var directionText = directionElement.dataset.flaskVariable;
-
+var zone_distancesText = zone_distancesElement.dataset.flaskVariable;
 
 var carriages = carriagesText.split(/,(?![^\[\]]*])/);
 
@@ -67,6 +69,18 @@ function isAntiAlphabetical(keys) {
 
 var invert = false;
 
+
+
+
+var zone_distances = JSON.parse(zone_distancesText);
+
+var lastDistance = zone_distances[zone_distances.length - 1]; /**/
+zone_distances.push(lastDistance); /**/
+var totalDistance = zone_distances.reduce((sum, distance) => sum + distance, 0);/**/
+console.log(zone_distances);
+console.log(totalDistance);
+
+
 const groupedZones = {};
 zone_markersJSON.forEach(element => {
     if (!groupedZones[element.ref]) {
@@ -74,6 +88,13 @@ zone_markersJSON.forEach(element => {
     }
     groupedZones[element.ref].push(element);
 });
+
+console.log(groupedZones);
+
+/*// Si vous voulez une liste de références et de distances à partir de groupedZones
+const result = Object.values(groupedZones);
+
+console.log(result);*/
 
 const keys = Object.keys(groupedZones);
 
@@ -85,16 +106,22 @@ if (invert) {
     keys.reverse();
 }
 
-keys.forEach(ref => {
+
+keys.forEach((ref, index) => {
     const elements = groupedZones[ref];
     let totalOccurences = elements.length;
+    console.log(totalOccurences);
     const div = document.createElement("div");
     div.setAttribute('class', 'zone');
     div.textContent = ref;
+    
+    distance = zone_distances[index];
 
     if (totalOccurences > 1) {
         div.style.flexGrow = totalOccurences;
     }
+    
+    console.log(distance);
 
     zones.appendChild(div);
 });
@@ -151,7 +178,7 @@ var arr = document.createElement('div');
 arr.setAttribute('class', 'arrow');
 
 //interverti
-if (invert) { //interverti
+if (invert) {
     if (directionText === "left") {
         directionText = "right"
     } else if (directionText === "right") {
@@ -174,4 +201,4 @@ tchou.appendChild(container)
 
 setInterval(function(){
     window.location.reload();
-}, 5000); // Rafraîchit la page toutes les 5 secondes (5000 millisecondes)
+}, 30000); // Rafraîchit la page toutes les 5 secondes (5000 millisecondes)
