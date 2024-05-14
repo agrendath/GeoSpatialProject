@@ -9,6 +9,17 @@ import composition
 
 overpass_api = overpy.Overpass()
 
+def getZoneDistances(zone_markers):
+    points = []
+    distances = []
+    for marker in zone_markers:
+        points.append((marker["lat"], marker["lon"]))
+    
+    for i in range(len(points) - 1):
+        distances.append(computeDistance(points[i], points[i + 1]))
+
+    return distances
+
 def computeDistance(location1, location2):
     """
     Returns the distance in meters between two geographic locations.
@@ -506,10 +517,15 @@ def index():
     except KeyError:
         zone_markers = "None"
 
+    if zone_markers == "None":
+        zone_distances = []
+    else:
+        zone_distances = getZoneDistances(zone_markers)
+
     return render_template('index.html', error="No", platform=f"{platform}", destination=f"{destination}",
                            departure_time=f"{departure_time}",
                            facilities=facilities, composition_occupancy=f"{composition_data['occupancy']}",
                            carriages=carriages,
                            position_info=f"{position_info}", zone_markers=zone_markers,
                            next_destination=f"{next_destination}", next_departure_time=f"{next_departure_time}", 
-                           stops=stops, direction=f"{direction}")
+                           stops=stops, direction=f"{direction}", zone_distances=f"{zone_distances}")
