@@ -10,6 +10,15 @@ import composition
 overpass_api = overpy.Overpass()
 
 def getZoneDistances(zone_markers):
+    """
+    Returns the distances between zone markers in meters.
+
+    Parameters:
+    - zone_markers (list): List of zone markers.
+
+    Returns:
+    list: List of distances between the zone markers in meters.
+    """
     points = []
     distances = []
     for marker in zone_markers:
