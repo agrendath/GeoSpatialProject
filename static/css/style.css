@@ -99,7 +99,7 @@ h1 {
 }
 .zone{
     background-color: #0065af;
-    flex: 1; /* Chaque élément aura la même largeur */
+    /*flex: 1; /* Chaque élément aura la même largeur */
     margin: 5px; 
     text-align: center;
     margin-top: 0;

@@ -77,9 +77,6 @@ var zone_distances = JSON.parse(zone_distancesText);
 var lastDistance = zone_distances[zone_distances.length - 1]; /**/
 zone_distances.push(lastDistance); /**/
 var totalDistance = zone_distances.reduce((sum, distance) => sum + distance, 0);/**/
-console.log(zone_distances);
-console.log(totalDistance);
-
 
 const groupedZones = {};
 zone_markersJSON.forEach(element => {
@@ -89,12 +86,7 @@ zone_markersJSON.forEach(element => {
     groupedZones[element.ref].push(element);
 });
 
-console.log(groupedZones);
 
-/*// Si vous voulez une liste de références et de distances à partir de groupedZones
-const result = Object.values(groupedZones);
-
-console.log(result);*/
 
 const keys = Object.keys(groupedZones);
 
@@ -110,18 +102,25 @@ if (invert) {
 keys.forEach((ref, index) => {
     const elements = groupedZones[ref];
     let totalOccurences = elements.length;
-    console.log(totalOccurences);
-    const div = document.createElement("div");
-    div.setAttribute('class', 'zone');
-    div.textContent = ref;
     
     distance = zone_distances[index];
 
     if (totalOccurences > 1) {
-        div.style.flexGrow = totalOccurences;
+        for (let i = 1; i < totalOccurences; i++) {
+            distance += zone_distances[index + i];
+        }
+    } else {
+        distance = zone_distances[index];
     }
-    
-    console.log(distance);
+
+    const zoneWidth = (100/ totalDistance) * distance;
+
+    const div = document.createElement("div");
+    div.setAttribute('class', 'zone');
+    div.textContent = ref;
+    div.style.width = zoneWidth + '%';
+  
+
 
     zones.appendChild(div);
 });
