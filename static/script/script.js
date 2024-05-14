@@ -48,9 +48,9 @@ var invert = false;
 
 var zone_distances = JSON.parse(zone_distancesText);
 
-var lastDistance = zone_distances[zone_distances.length - 1]; /**/
-zone_distances.push(lastDistance); /**/
-var totalDistance = zone_distances.reduce((sum, distance) => sum + distance, 0);/**/
+var lastDistance = zone_distances[zone_distances.length - 1]; 
+zone_distances.push(lastDistance); 
+var totalDistance = zone_distances.reduce((sum, distance) => sum + distance, 0);
 
 const groupedZones = {};
 zone_markersJSON.forEach(element => {
@@ -86,21 +86,23 @@ if (invert) {
 }
 //fin interverti
 
-
-keys.forEach((ref, index) => {
+var index = 0;
+keys.forEach(ref => {
     const elements = groupedZones[ref];
     let totalOccurences = elements.length;
     
     distance = zone_distances[index];
-
+    
     if (totalOccurences > 1) {
         for (let i = 1; i < totalOccurences; i++) {
             distance += zone_distances[index + i];
         }
+        index = index + (totalOccurences-1);
     } else {
         distance = zone_distances[index];
     }
-
+    index = index + 1;
+   
     const zoneWidth = (100/ totalDistance) * distance;
 
     const div = document.createElement("div");
