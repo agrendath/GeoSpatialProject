@@ -271,7 +271,7 @@ def getStandstillPositions(overpass_station_name):
     (
     nwr["railway"="station"][name=\"""" + overpass_station_name + """\"]["station"!="subway"]["tram"!="yes"](area.searchArea);
     );
-    nwr["railway"="signal"](around: 100.00);
+    nwr["railway"="signal"](around: 500.00);
     out geom;
     """
     response = overpass_api.query(query)
@@ -344,7 +344,7 @@ def getZoneMarkers(overpass_station_name):
     (
     nwr["railway"="station"][name=\"""" + overpass_station_name + """\"]["station"!="subway"]["tram"!="yes"](area.searchArea);
     );
-    nwr["railway"="platform_marker"](around: 100.00);
+    nwr["railway"="platform_marker"](around: 500.00);
     out geom;
     """
 
